@@ -2642,11 +2642,11 @@ libffitest.so.1.0: ffitest.c
 
 #   (b) When we precompile system libraries, we want to control the start index of gensym.
 #       Since we should avoid index overlapping between pre-compile libraries and pre-compiled psyntax.
-#       So using environment variable MOSH_GENSYM_START, we control the index.
+#       So using environment variable MOSH_GENSYM_PREFIX, we control the prefix.
 update:
 	(find . -name "*.ss.fasl" | xargs rm) ; true
 	(find . -name "*.sls.fasl" | xargs rm) ; true
-	MOSH_GENSYM_START=50000 ./mosh scripts/pre-compile-r6rs.scm scripts/pre-compile-target.scm
+	MOSH_GENSYM_PREFIX=L ./mosh scripts/pre-compile-r6rs.scm scripts/pre-compile-target.scm
 
 # when you release comment out start
 @DEVELOPER_TRUE@Reader.tab.cpp: Reader.y
@@ -2777,7 +2777,7 @@ gtest_main.a : gtest-all.o gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
 
 install-data-hook :
-	(cd doc &&  MOSH_GENSYM_START=1000 ../mosh ../scripts/pre-compile-r6rs.scm ../scripts/pre-compile-target.scm)
+	(cd doc &&  MOSH_GENSYM_PREFIX=I ../mosh ../scripts/pre-compile-r6rs.scm ../scripts/pre-compile-target.scm)
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
