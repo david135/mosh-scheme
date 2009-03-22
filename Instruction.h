@@ -435,6 +435,6 @@ public:
 
 
 };
-}; // namespace scheme
+} // namespace scheme
 
 #endif // SCHEME_INSTRUCTION_H_
