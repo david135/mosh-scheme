@@ -2738,15 +2738,19 @@ update:
 
 @DEVELOPER_TRUE@compiler-with-library.scmc: ./compiler-with-library.scm ./compiler-vm.scm
 @DEVELOPER_TRUE@	@GOSH@ ./vm.scm compile-file-with-macro $(PWD)/$< > $(PWD)/$@
+@DEVELOPER_TRUE@	sed -i -e "s/#\\\\null/#\\\\nul/g;s/|\.\.\.|/\.\.\./g;s/|@|/@/g" $(PWD)/$@
 
 @DEVELOPER_TRUE@SUFFIXES: .scmc .h
 
 @DEVELOPER_TRUE@.scmc.h:
-@DEVELOPER_TRUE@	(cd doc && mosh ../scripts/scmc2fasl.scm $(PWD)/$< $(PWD)/$<.fasl)
-@DEVELOPER_TRUE@	(cd doc && mosh ../scripts/binary2c.scm $(PWD)/$<.fasl $(PWD)/$@)
+@DEVELOPER_TRUE@	./mosh ./scripts/scmc2fasl.scm $(PWD)/$< $(PWD)/$<.fasl
+@DEVELOPER_TRUE@	./mosh ./scripts/binary2c.scm $(PWD)/$<.fasl $(PWD)/$@
+# 	(cd doc && mosh ../scripts/scmc2fasl.scm $(PWD)/$< $(PWD)/$<.fasl)
+# 	(cd doc && mosh ../scripts/binary2c.scm $(PWD)/$<.fasl $(PWD)/$@)
 
 @DEVELOPER_TRUE@match.scmc: ./match.scm ./compiler-vm.scm
 @DEVELOPER_TRUE@	@GOSH@ ./vm.scm compile-file-without-macro $(PWD)/$< > $(PWD)/$@
+@DEVELOPER_TRUE@	sed -i -e "s/#\\\\null/#\\\\nul/g;s/|\.\.\.|/\.\.\./g" $(PWD)/$@
 
 # we need to replace #\null => #\nul and |...| => ...
 # It is the difference between gauche and mosh.
