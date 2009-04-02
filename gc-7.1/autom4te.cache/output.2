@@ -4879,6 +4879,18 @@ test -z "$INSTALL_DATA" && INSTALL_DATA='${INSTALL} -m 644'
 
 ## Mosh start
 gc_cflags="${gc_cflags} -fomit-frame-pointer -DUSE_I686_PREFETCH"
+cat >>confdefs.h <<\_ACEOF
+@%:@define DONT_ADD_BYTE_AT_END 1
+_ACEOF
+ ## N.B. gc-7.1 has bug about this. Use patch by Hans Boehm
+cat >>confdefs.h <<\_ACEOF
+@%:@define LARGE_CONFIG 1
+_ACEOF
+
+cat >>confdefs.h <<\_ACEOF
+@%:@define NO_CLOCK 1
+_ACEOF
+
 ## Mosh end
 
 GC_CFLAGS=${gc_cflags}
@@ -4918,21 +4930,6 @@ if test "${enable_cplusplus+set}" = set; then
 fi
 
 
-## Mosh start
-cat >>confdefs.h <<\_ACEOF
-@%:@define DONT_ADD_BYTE_AT_END 1
-_ACEOF
- ## N.B. gc-7.1 bug. Don't enable THREAD_LOCAL_ALLOC
-cat >>confdefs.h <<\_ACEOF
-@%:@define LARGE_CONFIG 1
-_ACEOF
-
-cat >>confdefs.h <<\_ACEOF
-@%:@define NO_CLOCK 1
-_ACEOF
-
-THREADS=no
-## Mosh end
 
 INCLUDES=-I${srcdir}/include
 THREADDLLIBS=

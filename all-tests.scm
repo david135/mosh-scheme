@@ -1466,7 +1466,7 @@
 (display "\r")(let1 val (begin (read-write-invariant? "\v")) (if (equal? '#t val) (format #t " Running ~d/~d" 1872 1934) (begin (add-error '(read-write-invariant? "\v") '#t val))))
 (display "\r")(let1 val (begin (read-write-invariant? "\r")) (if (equal? '#t val) (format #t " Running ~d/~d" 1873 1934) (begin (add-error '(read-write-invariant? "\r") '#t val))))
 (display "\r")(let1 val (begin (read-write-invariant? 'abc)) (if (equal? '#t val) (format #t " Running ~d/~d" 1874 1934) (begin (add-error '(read-write-invariant? 'abc) '#t val))))
-(display "\r")(let1 val (begin (read-write-invariant? '@)) (if (equal? '#t val) (format #t " Running ~d/~d" 1875 1934) (begin (add-error '(read-write-invariant? '@) '#t val))))
+(display "\r")(let1 val (begin (read-write-invariant? '\x40;)) (if (equal? '#t val) (format #t " Running ~d/~d" 1875 1934) (begin (add-error '(read-write-invariant? '\x40;) '#t val))))
 (display "\r")(let1 val (begin (read-write-invariant? 'a\x20;c)) (if (equal? '#t val) (format #t " Running ~d/~d" 1876 1934) (begin (add-error '(read-write-invariant? 'a\x20;c) '#t val))))
 (display "\r")(let1 val (begin (read-write-invariant? '(1 2 3))) (if (equal? '#t val) (format #t " Running ~d/~d" 1877 1934) (begin (add-error '(read-write-invariant? '(1 2 3)) '#t val))))
 (display "\r")(let1 val (begin (read-write-invariant? '(1 #\2 "3"))) (if (equal? '#t val) (format #t " Running ~d/~d" 1878 1934) (begin (add-error '(read-write-invariant? '(1 #\2 "3")) '#t val))))
