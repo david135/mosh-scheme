@@ -4911,7 +4911,10 @@ $as_echo "$THREADS" >&6; }
 fi
 
 
+## MOSH start
+## Ubuntu 8.10 amd64 with DLINUX_THREADS=1 makes gctest crash.
 THREADS=no
+## MOSH end
 
 @%:@ Check whether --enable-parallel-mark was given.
 if test "${enable_parallel_mark+set}" = set; then
