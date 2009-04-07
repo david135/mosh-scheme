@@ -37,13 +37,11 @@ build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
 TESTS = test_object$(EXEEXT) test_vm$(EXEEXT) test_port$(EXEEXT) \
-	test_fasl$(EXEEXT) test_ffi$(EXEEXT) test_compat$(EXEEXT)
+	test_fasl$(EXEEXT) test_ffi$(EXEEXT)
 bin_PROGRAMS = mosh$(EXEEXT) test_port$(EXEEXT) test_fasl$(EXEEXT) \
-	test_ffi$(EXEEXT) test_object$(EXEEXT) test_vm$(EXEEXT) \
-	test_compat$(EXEEXT)
+	test_ffi$(EXEEXT) test_object$(EXEEXT) test_vm$(EXEEXT)
 check_PROGRAMS = test_object$(EXEEXT) test_vm$(EXEEXT) \
-	test_port$(EXEEXT) test_fasl$(EXEEXT) test_ffi$(EXEEXT) \
-	test_compat$(EXEEXT)
+	test_port$(EXEEXT) test_fasl$(EXEEXT) test_ffi$(EXEEXT)
 subdir = .
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
@@ -143,16 +141,11 @@ mosh_OBJECTS = $(am_mosh_OBJECTS)
 mosh_DEPENDENCIES = libmosh.a $(GC_LIB) $(REGEXP_LIB)
 mosh_LINK = $(CXXLD) $(mosh_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-am_test_compat_OBJECTS = test_compat-OScompatTest.$(OBJEXT) \
-	test_compat-TestingSignalHandler.$(OBJEXT)
-test_compat_OBJECTS = $(am_test_compat_OBJECTS)
-am__DEPENDENCIES_1 = libmosh.a gtest_main.a $(GC_LIB) $(REGEXP_LIB)
-test_compat_LINK = $(CXXLD) $(test_compat_CXXFLAGS) $(CXXFLAGS) \
-	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 am_test_fasl_OBJECTS = test_fasl-FaslTest.$(OBJEXT) \
 	test_fasl-TestingSignalHandler.$(OBJEXT) \
 	test_fasl-TestingVM.$(OBJEXT)
 test_fasl_OBJECTS = $(am_test_fasl_OBJECTS)
+am__DEPENDENCIES_1 = libmosh.a gtest_main.a $(GC_LIB) $(REGEXP_LIB)
 test_fasl_LINK = $(CXXLD) $(test_fasl_CXXFLAGS) $(CXXFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 am_test_ffi_OBJECTS = test_ffi-FFITest.$(OBJEXT) \
@@ -191,13 +184,12 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(libmosh_a_SOURCES) $(mosh_SOURCES) $(test_compat_SOURCES) \
-	$(test_fasl_SOURCES) $(test_ffi_SOURCES) \
-	$(test_object_SOURCES) $(test_port_SOURCES) $(test_vm_SOURCES)
-DIST_SOURCES = $(libmosh_a_SOURCES) $(mosh_SOURCES) \
-	$(test_compat_SOURCES) $(test_fasl_SOURCES) \
+SOURCES = $(libmosh_a_SOURCES) $(mosh_SOURCES) $(test_fasl_SOURCES) \
 	$(test_ffi_SOURCES) $(test_object_SOURCES) \
 	$(test_port_SOURCES) $(test_vm_SOURCES)
+DIST_SOURCES = $(libmosh_a_SOURCES) $(mosh_SOURCES) \
+	$(test_fasl_SOURCES) $(test_ffi_SOURCES) \
+	$(test_object_SOURCES) $(test_port_SOURCES) $(test_vm_SOURCES)
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	html-recursive info-recursive install-data-recursive \
 	install-dvi-recursive install-exec-recursive \
@@ -641,10 +633,6 @@ test_ffi_DEPENDENCIES = $(TEST_DEPENDENCIES_) libffitest.so.1.0
 test_ffi_CXXFLAGS = $(TEST_CXXFLAGS_)
 test_ffi_SOURCES = FFITest.cpp TestingSignalHandler.cpp TestingVM.cpp
 test_ffi_LDADD = $(TEST_LDADD_)
-test_compat_DEPENDENCIES = $(TEST_DEPENDENCIES_)
-test_compat_CXXFLAGS = $(TEST_CXXFLAGS_)
-test_compat_SOURCES = OScompatTest.cpp TestingSignalHandler.cpp
-test_compat_LDADD = $(TEST_LDADD_)
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
@@ -744,9 +732,6 @@ clean-checkPROGRAMS:
 mosh$(EXEEXT): $(mosh_OBJECTS) $(mosh_DEPENDENCIES) 
 	@rm -f mosh$(EXEEXT)
 	$(mosh_LINK) $(mosh_OBJECTS) $(mosh_LDADD) $(LIBS)
-test_compat$(EXEEXT): $(test_compat_OBJECTS) $(test_compat_DEPENDENCIES) 
-	@rm -f test_compat$(EXEEXT)
-	$(test_compat_LINK) $(test_compat_OBJECTS) $(test_compat_LDADD) $(LIBS)
 test_fasl$(EXEEXT): $(test_fasl_OBJECTS) $(test_fasl_DEPENDENCIES) 
 	@rm -f test_fasl$(EXEEXT)
 	$(test_fasl_LINK) $(test_fasl_OBJECTS) $(test_fasl_LDADD) $(LIBS)
@@ -869,8 +854,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-scheme.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-ucs4string.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mosh-main.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_compat-OScompatTest.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_compat-TestingSignalHandler.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_fasl-FaslTest.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_fasl-TestingSignalHandler.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_fasl-TestingVM.Po@am__quote@
@@ -2033,34 +2016,6 @@ mosh-main.obj: main.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mosh_CXXFLAGS) $(CXXFLAGS) -c -o mosh-main.obj `if test -f 'main.cpp'; then $(CYGPATH_W) 'main.cpp'; else $(CYGPATH_W) '$(srcdir)/main.cpp'; fi`
 
-test_compat-OScompatTest.o: OScompatTest.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_compat_CXXFLAGS) $(CXXFLAGS) -MT test_compat-OScompatTest.o -MD -MP -MF $(DEPDIR)/test_compat-OScompatTest.Tpo -c -o test_compat-OScompatTest.o `test -f 'OScompatTest.cpp' || echo '$(srcdir)/'`OScompatTest.cpp
-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/test_compat-OScompatTest.Tpo $(DEPDIR)/test_compat-OScompatTest.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='OScompatTest.cpp' object='test_compat-OScompatTest.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_compat_CXXFLAGS) $(CXXFLAGS) -c -o test_compat-OScompatTest.o `test -f 'OScompatTest.cpp' || echo '$(srcdir)/'`OScompatTest.cpp
-
-test_compat-OScompatTest.obj: OScompatTest.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_compat_CXXFLAGS) $(CXXFLAGS) -MT test_compat-OScompatTest.obj -MD -MP -MF $(DEPDIR)/test_compat-OScompatTest.Tpo -c -o test_compat-OScompatTest.obj `if test -f 'OScompatTest.cpp'; then $(CYGPATH_W) 'OScompatTest.cpp'; else $(CYGPATH_W) '$(srcdir)/OScompatTest.cpp'; fi`
-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/test_compat-OScompatTest.Tpo $(DEPDIR)/test_compat-OScompatTest.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='OScompatTest.cpp' object='test_compat-OScompatTest.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_compat_CXXFLAGS) $(CXXFLAGS) -c -o test_compat-OScompatTest.obj `if test -f 'OScompatTest.cpp'; then $(CYGPATH_W) 'OScompatTest.cpp'; else $(CYGPATH_W) '$(srcdir)/OScompatTest.cpp'; fi`
-
-test_compat-TestingSignalHandler.o: TestingSignalHandler.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_compat_CXXFLAGS) $(CXXFLAGS) -MT test_compat-TestingSignalHandler.o -MD -MP -MF $(DEPDIR)/test_compat-TestingSignalHandler.Tpo -c -o test_compat-TestingSignalHandler.o `test -f 'TestingSignalHandler.cpp' || echo '$(srcdir)/'`TestingSignalHandler.cpp
-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/test_compat-TestingSignalHandler.Tpo $(DEPDIR)/test_compat-TestingSignalHandler.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='TestingSignalHandler.cpp' object='test_compat-TestingSignalHandler.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_compat_CXXFLAGS) $(CXXFLAGS) -c -o test_compat-TestingSignalHandler.o `test -f 'TestingSignalHandler.cpp' || echo '$(srcdir)/'`TestingSignalHandler.cpp
-
-test_compat-TestingSignalHandler.obj: TestingSignalHandler.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_compat_CXXFLAGS) $(CXXFLAGS) -MT test_compat-TestingSignalHandler.obj -MD -MP -MF $(DEPDIR)/test_compat-TestingSignalHandler.Tpo -c -o test_compat-TestingSignalHandler.obj `if test -f 'TestingSignalHandler.cpp'; then $(CYGPATH_W) 'TestingSignalHandler.cpp'; else $(CYGPATH_W) '$(srcdir)/TestingSignalHandler.cpp'; fi`
-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/test_compat-TestingSignalHandler.Tpo $(DEPDIR)/test_compat-TestingSignalHandler.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='TestingSignalHandler.cpp' object='test_compat-TestingSignalHandler.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_compat_CXXFLAGS) $(CXXFLAGS) -c -o test_compat-TestingSignalHandler.obj `if test -f 'TestingSignalHandler.cpp'; then $(CYGPATH_W) 'TestingSignalHandler.cpp'; else $(CYGPATH_W) '$(srcdir)/TestingSignalHandler.cpp'; fi`
-
 test_fasl-FaslTest.o: FaslTest.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_fasl_CXXFLAGS) $(CXXFLAGS) -MT test_fasl-FaslTest.o -MD -MP -MF $(DEPDIR)/test_fasl-FaslTest.Tpo -c -o test_fasl-FaslTest.o `test -f 'FaslTest.cpp' || echo '$(srcdir)/'`FaslTest.cpp
 @am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/test_fasl-FaslTest.Tpo $(DEPDIR)/test_fasl-FaslTest.Po
@@ -2910,6 +2865,13 @@ gtest.a : gtest-all.o
 gtest_main.a : gtest-all.o gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
 	$(RANLIB) $@
+
+# TESTS += test_compat
+# check_PROGRAMS += test_compat
+# test_compat_DEPENDENCIES = $(TEST_DEPENDENCIES_)
+# test_compat_CXXFLAGS = $(TEST_CXXFLAGS_)
+# test_compat_SOURCES = OSCompatTest.cpp TestingSignalHandler.cpp
+# test_compat_LDADD = $(TEST_LDADD_)
 
 install-data-hook :
 	MOSH_GENSYM_PREFIX=I mosh ./scripts/pre-compile-r6rs.scm ./scripts/pre-compile-target.scm
