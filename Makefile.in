@@ -132,7 +132,7 @@ am_libmosh_a_OBJECTS = libmosh_a-Transcoder.$(OBJEXT) \
 	libmosh_a-FileBinaryInputOutputPort.$(OBJEXT) \
 	libmosh_a-TranscodedTextualInputOutputPort.$(OBJEXT) \
 	libmosh_a-BufferedFileBinaryInputOutputPort.$(OBJEXT) \
-	libmosh_a-OScompat.$(OBJEXT)
+	libmosh_a-OSCompat.$(OBJEXT)
 libmosh_a_OBJECTS = $(am_libmosh_a_OBJECTS)
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" \
 	"$(DESTDIR)$(datadir)" "$(DESTDIR)$(datadir)"
@@ -480,7 +480,7 @@ CustomBinaryOutputPort.h       CustomBinaryOutputPort.cpp          \
 FileBinaryInputOutputPort.h    FileBinaryInputOutputPort.cpp       \
 TranscodedTextualInputOutputPort.h  TranscodedTextualInputOutputPort.cpp  \
 BufferedFileBinaryInputOutputPort.h  BufferedFileBinaryInputOutputPort.cpp \
-OScompat.h OScompat.cpp
+OSCompat.h OSCompat.cpp
 
 mosh_core_libraries = \
 lib/lambda/wiki.ss    \
@@ -832,7 +832,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-NumberReader.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-NumberReader.tab.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-NumberScanner.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-OScompat.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-OSCompat.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-Object.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-PortProcedures.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-ProcessProcedures.Po@am__quote@
@@ -2005,19 +2005,19 @@ libmosh_a-BufferedFileBinaryInputOutputPort.obj: BufferedFileBinaryInputOutputPo
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -c -o libmosh_a-BufferedFileBinaryInputOutputPort.obj `if test -f 'BufferedFileBinaryInputOutputPort.cpp'; then $(CYGPATH_W) 'BufferedFileBinaryInputOutputPort.cpp'; else $(CYGPATH_W) '$(srcdir)/BufferedFileBinaryInputOutputPort.cpp'; fi`
 
-libmosh_a-OScompat.o: OScompat.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -MT libmosh_a-OScompat.o -MD -MP -MF $(DEPDIR)/libmosh_a-OScompat.Tpo -c -o libmosh_a-OScompat.o `test -f 'OScompat.cpp' || echo '$(srcdir)/'`OScompat.cpp
-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmosh_a-OScompat.Tpo $(DEPDIR)/libmosh_a-OScompat.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='OScompat.cpp' object='libmosh_a-OScompat.o' libtool=no @AMDEPBACKSLASH@
+libmosh_a-OSCompat.o: OSCompat.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -MT libmosh_a-OSCompat.o -MD -MP -MF $(DEPDIR)/libmosh_a-OSCompat.Tpo -c -o libmosh_a-OSCompat.o `test -f 'OSCompat.cpp' || echo '$(srcdir)/'`OSCompat.cpp
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmosh_a-OSCompat.Tpo $(DEPDIR)/libmosh_a-OSCompat.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='OSCompat.cpp' object='libmosh_a-OSCompat.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -c -o libmosh_a-OScompat.o `test -f 'OScompat.cpp' || echo '$(srcdir)/'`OScompat.cpp
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -c -o libmosh_a-OSCompat.o `test -f 'OSCompat.cpp' || echo '$(srcdir)/'`OSCompat.cpp
 
-libmosh_a-OScompat.obj: OScompat.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -MT libmosh_a-OScompat.obj -MD -MP -MF $(DEPDIR)/libmosh_a-OScompat.Tpo -c -o libmosh_a-OScompat.obj `if test -f 'OScompat.cpp'; then $(CYGPATH_W) 'OScompat.cpp'; else $(CYGPATH_W) '$(srcdir)/OScompat.cpp'; fi`
-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmosh_a-OScompat.Tpo $(DEPDIR)/libmosh_a-OScompat.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='OScompat.cpp' object='libmosh_a-OScompat.obj' libtool=no @AMDEPBACKSLASH@
+libmosh_a-OSCompat.obj: OSCompat.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -MT libmosh_a-OSCompat.obj -MD -MP -MF $(DEPDIR)/libmosh_a-OSCompat.Tpo -c -o libmosh_a-OSCompat.obj `if test -f 'OSCompat.cpp'; then $(CYGPATH_W) 'OSCompat.cpp'; else $(CYGPATH_W) '$(srcdir)/OSCompat.cpp'; fi`
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmosh_a-OSCompat.Tpo $(DEPDIR)/libmosh_a-OSCompat.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='OSCompat.cpp' object='libmosh_a-OSCompat.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -c -o libmosh_a-OScompat.obj `if test -f 'OScompat.cpp'; then $(CYGPATH_W) 'OScompat.cpp'; else $(CYGPATH_W) '$(srcdir)/OScompat.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -c -o libmosh_a-OSCompat.obj `if test -f 'OSCompat.cpp'; then $(CYGPATH_W) 'OSCompat.cpp'; else $(CYGPATH_W) '$(srcdir)/OSCompat.cpp'; fi`
 
 mosh-main.o: main.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mosh_CXXFLAGS) $(CXXFLAGS) -MT mosh-main.o -MD -MP -MF $(DEPDIR)/mosh-main.Tpo -c -o mosh-main.o `test -f 'main.cpp' || echo '$(srcdir)/'`main.cpp
