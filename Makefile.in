@@ -37,13 +37,14 @@ build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
 TESTS = test_object$(EXEEXT) test_vm$(EXEEXT) test_port$(EXEEXT) \
-	test_fasl$(EXEEXT) test_ffi$(EXEEXT) test_compat$(EXEEXT)
+	test_fasl$(EXEEXT) test_ffi$(EXEEXT) test_compat$(EXEEXT) \
+	test_getopt$(EXEEXT)
 bin_PROGRAMS = mosh$(EXEEXT) test_port$(EXEEXT) test_fasl$(EXEEXT) \
 	test_ffi$(EXEEXT) test_object$(EXEEXT) test_vm$(EXEEXT) \
-	test_compat$(EXEEXT)
+	test_compat$(EXEEXT) test_getopt$(EXEEXT)
 check_PROGRAMS = test_object$(EXEEXT) test_vm$(EXEEXT) \
 	test_port$(EXEEXT) test_fasl$(EXEEXT) test_ffi$(EXEEXT) \
-	test_compat$(EXEEXT)
+	test_compat$(EXEEXT) test_getopt$(EXEEXT)
 subdir = .
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
@@ -132,7 +133,7 @@ am_libmosh_a_OBJECTS = libmosh_a-Transcoder.$(OBJEXT) \
 	libmosh_a-FileBinaryInputOutputPort.$(OBJEXT) \
 	libmosh_a-TranscodedTextualInputOutputPort.$(OBJEXT) \
 	libmosh_a-BufferedFileBinaryInputOutputPort.$(OBJEXT) \
-	libmosh_a-OSCompat.$(OBJEXT)
+	libmosh_a-getoptU.$(OBJEXT) libmosh_a-OSCompat.$(OBJEXT)
 libmosh_a_OBJECTS = $(am_libmosh_a_OBJECTS)
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" \
 	"$(DESTDIR)$(datadir)" "$(DESTDIR)$(datadir)"
@@ -160,6 +161,11 @@ am_test_ffi_OBJECTS = test_ffi-FFITest.$(OBJEXT) \
 	test_ffi-TestingVM.$(OBJEXT)
 test_ffi_OBJECTS = $(am_test_ffi_OBJECTS)
 test_ffi_LINK = $(CXXLD) $(test_ffi_CXXFLAGS) $(CXXFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+am_test_getopt_OBJECTS = test_getopt-getoptUTest.$(OBJEXT) \
+	test_getopt-TestingSignalHandler.$(OBJEXT)
+test_getopt_OBJECTS = $(am_test_getopt_OBJECTS)
+test_getopt_LINK = $(CXXLD) $(test_getopt_CXXFLAGS) $(CXXFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 am_test_object_OBJECTS = test_object-ObjectTest.$(OBJEXT) \
 	test_object-TestingSignalHandler.$(OBJEXT)
@@ -193,11 +199,12 @@ CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 SOURCES = $(libmosh_a_SOURCES) $(mosh_SOURCES) $(test_compat_SOURCES) \
 	$(test_fasl_SOURCES) $(test_ffi_SOURCES) \
-	$(test_object_SOURCES) $(test_port_SOURCES) $(test_vm_SOURCES)
+	$(test_getopt_SOURCES) $(test_object_SOURCES) \
+	$(test_port_SOURCES) $(test_vm_SOURCES)
 DIST_SOURCES = $(libmosh_a_SOURCES) $(mosh_SOURCES) \
 	$(test_compat_SOURCES) $(test_fasl_SOURCES) \
-	$(test_ffi_SOURCES) $(test_object_SOURCES) \
-	$(test_port_SOURCES) $(test_vm_SOURCES)
+	$(test_ffi_SOURCES) $(test_getopt_SOURCES) \
+	$(test_object_SOURCES) $(test_port_SOURCES) $(test_vm_SOURCES)
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	html-recursive info-recursive install-data-recursive \
 	install-dvi-recursive install-exec-recursive \
@@ -480,6 +487,7 @@ CustomBinaryOutputPort.h       CustomBinaryOutputPort.cpp          \
 FileBinaryInputOutputPort.h    FileBinaryInputOutputPort.cpp       \
 TranscodedTextualInputOutputPort.h  TranscodedTextualInputOutputPort.cpp  \
 BufferedFileBinaryInputOutputPort.h  BufferedFileBinaryInputOutputPort.cpp \
+getoptU.h getoptU.cpp                                                        \
 OSCompat.h OSCompat.cpp
 
 mosh_core_libraries = \
@@ -645,6 +653,10 @@ test_compat_DEPENDENCIES = $(TEST_DEPENDENCIES_)
 test_compat_CXXFLAGS = $(TEST_CXXFLAGS_)
 test_compat_SOURCES = OSCompatTest.cpp TestingSignalHandler.cpp
 test_compat_LDADD = $(TEST_LDADD_)
+test_getopt_DEPENDENCIES = $(TEST_DEPENDENCIES_)
+test_getopt_CXXFLAGS = $(TEST_CXXFLAGS_)
+test_getopt_SOURCES = getoptUTest.cpp TestingSignalHandler.cpp
+test_getopt_LDADD = $(TEST_LDADD_)
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
@@ -753,6 +765,9 @@ test_fasl$(EXEEXT): $(test_fasl_OBJECTS) $(test_fasl_DEPENDENCIES)
 test_ffi$(EXEEXT): $(test_ffi_OBJECTS) $(test_ffi_DEPENDENCIES) 
 	@rm -f test_ffi$(EXEEXT)
 	$(test_ffi_LINK) $(test_ffi_OBJECTS) $(test_ffi_LDADD) $(LIBS)
+test_getopt$(EXEEXT): $(test_getopt_OBJECTS) $(test_getopt_DEPENDENCIES) 
+	@rm -f test_getopt$(EXEEXT)
+	$(test_getopt_LINK) $(test_getopt_OBJECTS) $(test_getopt_LDADD) $(LIBS)
 test_object$(EXEEXT): $(test_object_OBJECTS) $(test_object_DEPENDENCIES) 
 	@rm -f test_object$(EXEEXT)
 	$(test_object_LINK) $(test_object_OBJECTS) $(test_object_LDADD) $(LIBS)
@@ -866,6 +881,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-VM-Run.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-VM.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-Vector.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-getoptU.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-scheme.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-ucs4string.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mosh-main.Po@am__quote@
@@ -877,6 +893,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_ffi-FFITest.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_ffi-TestingSignalHandler.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_ffi-TestingVM.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_getopt-TestingSignalHandler.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_getopt-getoptUTest.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_object-ObjectTest.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_object-TestingSignalHandler.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_port-PortTest.Po@am__quote@
@@ -2005,6 +2023,20 @@ libmosh_a-BufferedFileBinaryInputOutputPort.obj: BufferedFileBinaryInputOutputPo
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -c -o libmosh_a-BufferedFileBinaryInputOutputPort.obj `if test -f 'BufferedFileBinaryInputOutputPort.cpp'; then $(CYGPATH_W) 'BufferedFileBinaryInputOutputPort.cpp'; else $(CYGPATH_W) '$(srcdir)/BufferedFileBinaryInputOutputPort.cpp'; fi`
 
+libmosh_a-getoptU.o: getoptU.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -MT libmosh_a-getoptU.o -MD -MP -MF $(DEPDIR)/libmosh_a-getoptU.Tpo -c -o libmosh_a-getoptU.o `test -f 'getoptU.cpp' || echo '$(srcdir)/'`getoptU.cpp
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmosh_a-getoptU.Tpo $(DEPDIR)/libmosh_a-getoptU.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='getoptU.cpp' object='libmosh_a-getoptU.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -c -o libmosh_a-getoptU.o `test -f 'getoptU.cpp' || echo '$(srcdir)/'`getoptU.cpp
+
+libmosh_a-getoptU.obj: getoptU.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -MT libmosh_a-getoptU.obj -MD -MP -MF $(DEPDIR)/libmosh_a-getoptU.Tpo -c -o libmosh_a-getoptU.obj `if test -f 'getoptU.cpp'; then $(CYGPATH_W) 'getoptU.cpp'; else $(CYGPATH_W) '$(srcdir)/getoptU.cpp'; fi`
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmosh_a-getoptU.Tpo $(DEPDIR)/libmosh_a-getoptU.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='getoptU.cpp' object='libmosh_a-getoptU.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -c -o libmosh_a-getoptU.obj `if test -f 'getoptU.cpp'; then $(CYGPATH_W) 'getoptU.cpp'; else $(CYGPATH_W) '$(srcdir)/getoptU.cpp'; fi`
+
 libmosh_a-OSCompat.o: OSCompat.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -MT libmosh_a-OSCompat.o -MD -MP -MF $(DEPDIR)/libmosh_a-OSCompat.Tpo -c -o libmosh_a-OSCompat.o `test -f 'OSCompat.cpp' || echo '$(srcdir)/'`OSCompat.cpp
 @am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmosh_a-OSCompat.Tpo $(DEPDIR)/libmosh_a-OSCompat.Po
@@ -2144,6 +2176,34 @@ test_ffi-TestingVM.obj: TestingVM.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='TestingVM.cpp' object='test_ffi-TestingVM.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_ffi_CXXFLAGS) $(CXXFLAGS) -c -o test_ffi-TestingVM.obj `if test -f 'TestingVM.cpp'; then $(CYGPATH_W) 'TestingVM.cpp'; else $(CYGPATH_W) '$(srcdir)/TestingVM.cpp'; fi`
+
+test_getopt-getoptUTest.o: getoptUTest.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_getopt_CXXFLAGS) $(CXXFLAGS) -MT test_getopt-getoptUTest.o -MD -MP -MF $(DEPDIR)/test_getopt-getoptUTest.Tpo -c -o test_getopt-getoptUTest.o `test -f 'getoptUTest.cpp' || echo '$(srcdir)/'`getoptUTest.cpp
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/test_getopt-getoptUTest.Tpo $(DEPDIR)/test_getopt-getoptUTest.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='getoptUTest.cpp' object='test_getopt-getoptUTest.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_getopt_CXXFLAGS) $(CXXFLAGS) -c -o test_getopt-getoptUTest.o `test -f 'getoptUTest.cpp' || echo '$(srcdir)/'`getoptUTest.cpp
+
+test_getopt-getoptUTest.obj: getoptUTest.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_getopt_CXXFLAGS) $(CXXFLAGS) -MT test_getopt-getoptUTest.obj -MD -MP -MF $(DEPDIR)/test_getopt-getoptUTest.Tpo -c -o test_getopt-getoptUTest.obj `if test -f 'getoptUTest.cpp'; then $(CYGPATH_W) 'getoptUTest.cpp'; else $(CYGPATH_W) '$(srcdir)/getoptUTest.cpp'; fi`
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/test_getopt-getoptUTest.Tpo $(DEPDIR)/test_getopt-getoptUTest.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='getoptUTest.cpp' object='test_getopt-getoptUTest.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_getopt_CXXFLAGS) $(CXXFLAGS) -c -o test_getopt-getoptUTest.obj `if test -f 'getoptUTest.cpp'; then $(CYGPATH_W) 'getoptUTest.cpp'; else $(CYGPATH_W) '$(srcdir)/getoptUTest.cpp'; fi`
+
+test_getopt-TestingSignalHandler.o: TestingSignalHandler.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_getopt_CXXFLAGS) $(CXXFLAGS) -MT test_getopt-TestingSignalHandler.o -MD -MP -MF $(DEPDIR)/test_getopt-TestingSignalHandler.Tpo -c -o test_getopt-TestingSignalHandler.o `test -f 'TestingSignalHandler.cpp' || echo '$(srcdir)/'`TestingSignalHandler.cpp
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/test_getopt-TestingSignalHandler.Tpo $(DEPDIR)/test_getopt-TestingSignalHandler.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='TestingSignalHandler.cpp' object='test_getopt-TestingSignalHandler.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_getopt_CXXFLAGS) $(CXXFLAGS) -c -o test_getopt-TestingSignalHandler.o `test -f 'TestingSignalHandler.cpp' || echo '$(srcdir)/'`TestingSignalHandler.cpp
+
+test_getopt-TestingSignalHandler.obj: TestingSignalHandler.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_getopt_CXXFLAGS) $(CXXFLAGS) -MT test_getopt-TestingSignalHandler.obj -MD -MP -MF $(DEPDIR)/test_getopt-TestingSignalHandler.Tpo -c -o test_getopt-TestingSignalHandler.obj `if test -f 'TestingSignalHandler.cpp'; then $(CYGPATH_W) 'TestingSignalHandler.cpp'; else $(CYGPATH_W) '$(srcdir)/TestingSignalHandler.cpp'; fi`
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/test_getopt-TestingSignalHandler.Tpo $(DEPDIR)/test_getopt-TestingSignalHandler.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='TestingSignalHandler.cpp' object='test_getopt-TestingSignalHandler.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_getopt_CXXFLAGS) $(CXXFLAGS) -c -o test_getopt-TestingSignalHandler.obj `if test -f 'TestingSignalHandler.cpp'; then $(CYGPATH_W) 'TestingSignalHandler.cpp'; else $(CYGPATH_W) '$(srcdir)/TestingSignalHandler.cpp'; fi`
 
 test_object-ObjectTest.o: ObjectTest.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_object_CXXFLAGS) $(CXXFLAGS) -MT test_object-ObjectTest.o -MD -MP -MF $(DEPDIR)/test_object-ObjectTest.Tpo -c -o test_object-ObjectTest.o `test -f 'ObjectTest.cpp' || echo '$(srcdir)/'`ObjectTest.cpp
