@@ -464,9 +464,6 @@ SUBDIRS =
 
 # The libatomic_ops library.  This is not ideal, since we pick up junk from
 # there.  The hard-coded version number should also go.
-
-# :FIXME: why do we distribute this one???
-#
 EXTRA_DIST = gc_cpp.cpp README.QUICK BCC_MAKEFILE NT_MAKEFILE \
 	NT_THREADS_MAKEFILE OS2_MAKEFILE PCR-Makefile digimars.mak \
 	EMX_MAKEFILE Makefile.direct Makefile.dj Makefile.DLLs \
@@ -478,9 +475,9 @@ EXTRA_DIST = gc_cpp.cpp README.QUICK BCC_MAKEFILE NT_MAKEFILE \
 	AmigaOS.c Mac_files/datastart.c Mac_files/dataend.c \
 	Mac_files/MacOS_config.h Mac_files/MacOS_Test_config.h \
 	include/private/msvc_dbg.h msvc_dbg.c libatomic_ops-1.2 \
-	libtool.m4 cord/cordbscs.c cord/cordtest.c cord/de.c \
-	cord/cordprnt.c cord/cordxtra.c cord/de_cmds.h cord/de_win.h \
-	cord/de_win.c cord/de_win.RC cord/de_win.ICO
+	cord/cordbscs.c cord/cordtest.c cord/de.c cord/cordprnt.c \
+	cord/cordxtra.c cord/de_cmds.h cord/de_win.h cord/de_win.c \
+	cord/de_win.RC cord/de_win.ICO
 
 # C Library
 # ---------
@@ -1347,7 +1344,6 @@ installdirs-am:
 	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(pkgdatadir)" "$(DESTDIR)$(includedir)" "$(DESTDIR)$(pkgincludedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
-install: install-recursive
 install-exec: install-exec-recursive
 install-data: install-data-recursive
 uninstall: uninstall-recursive
@@ -1472,6 +1468,11 @@ uninstall-am: uninstall-dist_pkgconfigDATA uninstall-dist_pkgdataDATA \
 .S.lo:
 	$(LTCOMPILE) $(ASM_CPP_OPTIONS) -c $<
 
+# :FIXME: why do we distribute this one???
+#
+# mosh commentout
+#EXTRA_DIST += libtool.m4
+
 #
 # :GOTCHA: GNU make rule for making .s out of .S is flawed, 
 # it will not remove dest if building fails
@@ -1485,6 +1486,7 @@ uninstall-am: uninstall-dist_pkgconfigDATA uninstall-dist_pkgdataDATA \
 clean:
 test:
 check:
+install:
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
