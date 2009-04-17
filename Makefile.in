@@ -293,6 +293,7 @@ SHELL = @SHELL@
 SHLIB_SO_LDFLAGS = @SHLIB_SO_LDFLAGS@
 STRIP = @STRIP@
 VERSION = @VERSION@
+WINDRES = @WINDRES@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
