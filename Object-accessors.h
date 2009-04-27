@@ -383,3 +383,15 @@ bool isTextualInputOutputPort() const
     && reinterpret_cast<HeapObject*>(val)->type == HeapObject::TextualInputOutputPort;
 }
 
+Socket* toSocket() const
+{
+    MOSH_ASSERT(isSocket());
+    return reinterpret_cast<Socket*>(reinterpret_cast<HeapObject*>(val)->obj);
+}
+
+bool isSocket() const
+{
+    return isHeapObject()
+    && reinterpret_cast<HeapObject*>(val)->type == HeapObject::Socket;
+}
+

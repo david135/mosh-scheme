@@ -120,6 +120,7 @@ am_libmosh_a_OBJECTS = libmosh_a-Transcoder.$(OBJEXT) \
 	libmosh_a-FlonumProcedures.$(OBJEXT) \
 	libmosh_a-BitwiseProcedures.$(OBJEXT) \
 	libmosh_a-ByteVectorProcedures.$(OBJEXT) \
+	libmosh_a-SocketProcedures.$(OBJEXT) \
 	libmosh_a-Equivalent.$(OBJEXT) \
 	libmosh_a-CompoundCondition.$(OBJEXT) \
 	libmosh_a-ucs4string.$(OBJEXT) libmosh_a-Vector.$(OBJEXT) \
@@ -131,9 +132,11 @@ am_libmosh_a_OBJECTS = libmosh_a-Transcoder.$(OBJEXT) \
 	libmosh_a-FFIProcedures.$(OBJEXT) \
 	libmosh_a-CustomBinaryOutputPort.$(OBJEXT) \
 	libmosh_a-FileBinaryInputOutputPort.$(OBJEXT) \
+	libmosh_a-SocketBinaryInputOutputPort.$(OBJEXT) \
 	libmosh_a-TranscodedTextualInputOutputPort.$(OBJEXT) \
 	libmosh_a-BufferedFileBinaryInputOutputPort.$(OBJEXT) \
-	libmosh_a-getoptU.$(OBJEXT) libmosh_a-OSCompat.$(OBJEXT)
+	libmosh_a-getoptU.$(OBJEXT) libmosh_a-OSCompatSocket.$(OBJEXT) \
+	libmosh_a-OSCompat.$(OBJEXT)
 libmosh_a_OBJECTS = $(am_libmosh_a_OBJECTS)
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" \
 	"$(DESTDIR)$(datadir)" "$(DESTDIR)$(datadir)"
@@ -474,6 +477,7 @@ ArithmeticProcedures.cpp       ArithmeticProcedures.h              \
 FlonumProcedures.cpp           FlonumProcedures.h                  \
 BitwiseProcedures.cpp          BitwiseProcedures.h                 \
 ByteVectorProcedures.cpp       ByteVectorProcedures.h              \
+SocketProcedures.cpp           SocketProcedures.h                  \
 Equivalent.h                   Equivalent.cpp                      \
 CompoundCondition.h            CompoundCondition.cpp               \
 ucs4string.h                   ucs4string.cpp                      \
@@ -490,10 +494,11 @@ FFI.h                          FFI.cpp                             \
 FFIProcedures.h                FFIProcedures.cpp                   \
 CustomBinaryOutputPort.h       CustomBinaryOutputPort.cpp          \
 FileBinaryInputOutputPort.h    FileBinaryInputOutputPort.cpp       \
+SocketBinaryInputOutputPort.h  SocketBinaryInputOutputPort.cpp     \
 TranscodedTextualInputOutputPort.h  TranscodedTextualInputOutputPort.cpp  \
 BufferedFileBinaryInputOutputPort.h  BufferedFileBinaryInputOutputPort.cpp \
 TestingFileBinaryOutputPort.h TestingFileBinaryInputPort.h \
-TestingVM.h \
+TestingVM.h OSConstants.h \
 getoptU.h getoptU.cpp                                                      \
 StandardOutputPort.h \
 StandardErrorPort.h \
@@ -501,13 +506,16 @@ StandardInputPort.h \
 BlockBufferedFileBinaryOutputPort.h \
 BlockBufferedFileBinaryInputOutputPort.h \
 LineBufferedFileBinaryInputOutputPort.h \
+OSCompatSocket.h OSCompatSocket.cpp \
 OSCompat.h OSCompat.cpp
 
 mosh_core_libraries = \
+lib/match.ss \
 lib/lambda/wiki.ss    \
 lib/mosh/ffi.ss    \
 lib/mosh/dbi.ss    \
 lib/mosh/mysql.ss    \
+lib/mosh/socket.ss    \
 lib/mosh/process.ss \
 lib/mosh/shell.ss \
 lib/mosh/shell/repl.ss \
@@ -616,14 +624,14 @@ lib/srfi/%3a99/records/syntactic.sls
 
 data_DATA = all-tests.scm #repl.scm #tools/psyntax-r6rs/rev10_to_10/psyntax.scm
 nobase_data_DATA = ${mosh_core_libraries} #${mosh_core_fasl_libraries}
-PRECOMPILE_SRC = compiler-with-library.scmc match.scmc psyntax.scmc
+PRECOMPILE_SRC = compiler-with-library.scmc pmatch.scmc psyntax.scmc
 INCLUDES = -I $(BOEHM_GC_DIR)/include -I $(ONIG_DIR)
-EXTRA_DIST = instruction.scm vm.scm library.scm compiler.scm free-vars.scm scripts match.scm test-data.scm doc repl.scm tools/psyntax-r6rs/rev10_to_10/psyntax.scm r6rs-examples tools/psyntax-r6rs RELNOTE r6rs-test-suite example lib cprocedures.cpp labels.cpp all-tests.scm test call.inc.cpp ${GTEST_DIR} ffitest.c bench win mosh.vcproj mosh.sln logo
+EXTRA_DIST = instruction.scm vm.scm library.scm compiler.scm free-vars.scm scripts pmatch.scm test-data.scm doc repl.scm tools/psyntax-r6rs/rev10_to_10/psyntax.scm r6rs-examples tools/psyntax-r6rs RELNOTE r6rs-test-suite example lib cprocedures.cpp labels.cpp all-tests.scm test call.inc.cpp ${GTEST_DIR} ffitest.c bench win mosh.vcproj mosh.sln logo
 GENERATED = \
 all-tests.scm Scanner.cpp NumberScanner.cpp psyntax.cpp  compiler-gauche.scm \
 DebugInstruction.h cprocedures.cpp      \
 labels.cpp match.cpp compiler.cpp psyntax.scmc             \
-match.scmc compiler-with-library.scmc compiler-vm-cpp.scm  \
+pmatch.scmc compiler-with-library.scmc compiler-vm-cpp.scm  \
 compiler-vm.scm compiler-with-library.scm Instruction.h    \
 psyntax.h psyntax.fasl match.h match.fasl                  \
 compiler-with-library.h compiler-with-library.fasl
@@ -867,6 +875,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-NumberReader.tab.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-NumberScanner.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-OSCompat.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-OSCompatSocket.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-Object.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-PortProcedures.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-ProcessProcedures.Po@am__quote@
@@ -882,6 +891,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-SString.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-Scanner.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-ScannerHelper.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-SocketBinaryInputOutputPort.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-SocketProcedures.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-StringProcedures.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-StringTextualInputPort.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-StringTextualOutputPort.Po@am__quote@
@@ -1790,6 +1801,20 @@ libmosh_a-ByteVectorProcedures.obj: ByteVectorProcedures.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -c -o libmosh_a-ByteVectorProcedures.obj `if test -f 'ByteVectorProcedures.cpp'; then $(CYGPATH_W) 'ByteVectorProcedures.cpp'; else $(CYGPATH_W) '$(srcdir)/ByteVectorProcedures.cpp'; fi`
 
+libmosh_a-SocketProcedures.o: SocketProcedures.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -MT libmosh_a-SocketProcedures.o -MD -MP -MF $(DEPDIR)/libmosh_a-SocketProcedures.Tpo -c -o libmosh_a-SocketProcedures.o `test -f 'SocketProcedures.cpp' || echo '$(srcdir)/'`SocketProcedures.cpp
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmosh_a-SocketProcedures.Tpo $(DEPDIR)/libmosh_a-SocketProcedures.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='SocketProcedures.cpp' object='libmosh_a-SocketProcedures.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -c -o libmosh_a-SocketProcedures.o `test -f 'SocketProcedures.cpp' || echo '$(srcdir)/'`SocketProcedures.cpp
+
+libmosh_a-SocketProcedures.obj: SocketProcedures.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -MT libmosh_a-SocketProcedures.obj -MD -MP -MF $(DEPDIR)/libmosh_a-SocketProcedures.Tpo -c -o libmosh_a-SocketProcedures.obj `if test -f 'SocketProcedures.cpp'; then $(CYGPATH_W) 'SocketProcedures.cpp'; else $(CYGPATH_W) '$(srcdir)/SocketProcedures.cpp'; fi`
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmosh_a-SocketProcedures.Tpo $(DEPDIR)/libmosh_a-SocketProcedures.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='SocketProcedures.cpp' object='libmosh_a-SocketProcedures.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -c -o libmosh_a-SocketProcedures.obj `if test -f 'SocketProcedures.cpp'; then $(CYGPATH_W) 'SocketProcedures.cpp'; else $(CYGPATH_W) '$(srcdir)/SocketProcedures.cpp'; fi`
+
 libmosh_a-Equivalent.o: Equivalent.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -MT libmosh_a-Equivalent.o -MD -MP -MF $(DEPDIR)/libmosh_a-Equivalent.Tpo -c -o libmosh_a-Equivalent.o `test -f 'Equivalent.cpp' || echo '$(srcdir)/'`Equivalent.cpp
 @am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmosh_a-Equivalent.Tpo $(DEPDIR)/libmosh_a-Equivalent.Po
@@ -2014,6 +2039,20 @@ libmosh_a-FileBinaryInputOutputPort.obj: FileBinaryInputOutputPort.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -c -o libmosh_a-FileBinaryInputOutputPort.obj `if test -f 'FileBinaryInputOutputPort.cpp'; then $(CYGPATH_W) 'FileBinaryInputOutputPort.cpp'; else $(CYGPATH_W) '$(srcdir)/FileBinaryInputOutputPort.cpp'; fi`
 
+libmosh_a-SocketBinaryInputOutputPort.o: SocketBinaryInputOutputPort.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -MT libmosh_a-SocketBinaryInputOutputPort.o -MD -MP -MF $(DEPDIR)/libmosh_a-SocketBinaryInputOutputPort.Tpo -c -o libmosh_a-SocketBinaryInputOutputPort.o `test -f 'SocketBinaryInputOutputPort.cpp' || echo '$(srcdir)/'`SocketBinaryInputOutputPort.cpp
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmosh_a-SocketBinaryInputOutputPort.Tpo $(DEPDIR)/libmosh_a-SocketBinaryInputOutputPort.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='SocketBinaryInputOutputPort.cpp' object='libmosh_a-SocketBinaryInputOutputPort.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -c -o libmosh_a-SocketBinaryInputOutputPort.o `test -f 'SocketBinaryInputOutputPort.cpp' || echo '$(srcdir)/'`SocketBinaryInputOutputPort.cpp
+
+libmosh_a-SocketBinaryInputOutputPort.obj: SocketBinaryInputOutputPort.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -MT libmosh_a-SocketBinaryInputOutputPort.obj -MD -MP -MF $(DEPDIR)/libmosh_a-SocketBinaryInputOutputPort.Tpo -c -o libmosh_a-SocketBinaryInputOutputPort.obj `if test -f 'SocketBinaryInputOutputPort.cpp'; then $(CYGPATH_W) 'SocketBinaryInputOutputPort.cpp'; else $(CYGPATH_W) '$(srcdir)/SocketBinaryInputOutputPort.cpp'; fi`
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmosh_a-SocketBinaryInputOutputPort.Tpo $(DEPDIR)/libmosh_a-SocketBinaryInputOutputPort.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='SocketBinaryInputOutputPort.cpp' object='libmosh_a-SocketBinaryInputOutputPort.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -c -o libmosh_a-SocketBinaryInputOutputPort.obj `if test -f 'SocketBinaryInputOutputPort.cpp'; then $(CYGPATH_W) 'SocketBinaryInputOutputPort.cpp'; else $(CYGPATH_W) '$(srcdir)/SocketBinaryInputOutputPort.cpp'; fi`
+
 libmosh_a-TranscodedTextualInputOutputPort.o: TranscodedTextualInputOutputPort.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -MT libmosh_a-TranscodedTextualInputOutputPort.o -MD -MP -MF $(DEPDIR)/libmosh_a-TranscodedTextualInputOutputPort.Tpo -c -o libmosh_a-TranscodedTextualInputOutputPort.o `test -f 'TranscodedTextualInputOutputPort.cpp' || echo '$(srcdir)/'`TranscodedTextualInputOutputPort.cpp
 @am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmosh_a-TranscodedTextualInputOutputPort.Tpo $(DEPDIR)/libmosh_a-TranscodedTextualInputOutputPort.Po
@@ -2055,6 +2094,20 @@ libmosh_a-getoptU.obj: getoptU.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='getoptU.cpp' object='libmosh_a-getoptU.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -c -o libmosh_a-getoptU.obj `if test -f 'getoptU.cpp'; then $(CYGPATH_W) 'getoptU.cpp'; else $(CYGPATH_W) '$(srcdir)/getoptU.cpp'; fi`
+
+libmosh_a-OSCompatSocket.o: OSCompatSocket.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -MT libmosh_a-OSCompatSocket.o -MD -MP -MF $(DEPDIR)/libmosh_a-OSCompatSocket.Tpo -c -o libmosh_a-OSCompatSocket.o `test -f 'OSCompatSocket.cpp' || echo '$(srcdir)/'`OSCompatSocket.cpp
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmosh_a-OSCompatSocket.Tpo $(DEPDIR)/libmosh_a-OSCompatSocket.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='OSCompatSocket.cpp' object='libmosh_a-OSCompatSocket.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -c -o libmosh_a-OSCompatSocket.o `test -f 'OSCompatSocket.cpp' || echo '$(srcdir)/'`OSCompatSocket.cpp
+
+libmosh_a-OSCompatSocket.obj: OSCompatSocket.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -MT libmosh_a-OSCompatSocket.obj -MD -MP -MF $(DEPDIR)/libmosh_a-OSCompatSocket.Tpo -c -o libmosh_a-OSCompatSocket.obj `if test -f 'OSCompatSocket.cpp'; then $(CYGPATH_W) 'OSCompatSocket.cpp'; else $(CYGPATH_W) '$(srcdir)/OSCompatSocket.cpp'; fi`
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmosh_a-OSCompatSocket.Tpo $(DEPDIR)/libmosh_a-OSCompatSocket.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='OSCompatSocket.cpp' object='libmosh_a-OSCompatSocket.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -c -o libmosh_a-OSCompatSocket.obj `if test -f 'OSCompatSocket.cpp'; then $(CYGPATH_W) 'OSCompatSocket.cpp'; else $(CYGPATH_W) '$(srcdir)/OSCompatSocket.cpp'; fi`
 
 libmosh_a-OSCompat.o: OSCompat.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -MT libmosh_a-OSCompat.o -MD -MP -MF $(DEPDIR)/libmosh_a-OSCompat.Tpo -c -o libmosh_a-OSCompat.o `test -f 'OSCompat.cpp' || echo '$(srcdir)/'`OSCompat.cpp
@@ -2885,12 +2938,12 @@ update:
 @DEVELOPER_TRUE@SUFFIXES: .scmc .h
 
 @DEVELOPER_TRUE@.scmc.h:
-@DEVELOPER_TRUE@	./mosh ./scripts/scmc2fasl.scm $(PWD)/$< $(PWD)/$<.fasl
-@DEVELOPER_TRUE@	./mosh ./scripts/binary2c.scm $(PWD)/$<.fasl $(PWD)/$@
+@DEVELOPER_TRUE@	mosh ./scripts/scmc2fasl.scm $(PWD)/$< $(PWD)/$<.fasl
+@DEVELOPER_TRUE@	mosh ./scripts/binary2c.scm $(PWD)/$<.fasl $(PWD)/$@
 # 	(cd doc && mosh ../scripts/scmc2fasl.scm $(PWD)/$< $(PWD)/$<.fasl)
 # 	(cd doc && mosh ../scripts/binary2c.scm $(PWD)/$<.fasl $(PWD)/$@)
 
-@DEVELOPER_TRUE@match.scmc: ./match.scm ./compiler-vm.scm
+@DEVELOPER_TRUE@pmatch.scmc: ./pmatch.scm ./compiler-vm.scm
 @DEVELOPER_TRUE@	@GOSH@ ./vm.scm compile-file-without-macro $(PWD)/$< > $(PWD)/$@
 @DEVELOPER_TRUE@	sed -i -e "s/#\\\\null/#\\\\nul/g;s/|\.\.\.|/\.\.\./g" $(PWD)/$@
 
@@ -2935,6 +2988,9 @@ update:
 @DEVELOPER_TRUE@Object-accessors.h: ./accessors.scm
 @DEVELOPER_TRUE@	./mosh ./scripts/gen-accessors.scm > $@
 
+@DEVELOPER_TRUE@OSConstants.h: ./os-constants.scm
+@DEVELOPER_TRUE@	./mosh ./scripts/gen-os-constants.scm > $@
+
 @DEVELOPER_TRUE@doc:
 @DEVELOPER_TRUE@	./mosh scripts/gen-doc-from-r6rs.scm
 @DEVELOPER_TRUE@	perl ~/NaturalDocs-1.4/NaturalDocs -i . -o HTML doc/html -p doc/config -s pink -xi tools
@@ -2953,6 +3009,7 @@ bench:
 check: test
 
 test: ./mosh all-tests.scm update
+	./mosh -5 all-tests.scm
 	./mosh test/testing.scm
 	./mosh test/io-error.scm
 	./mosh test/input-output-port.scm
@@ -2971,7 +3028,8 @@ test: ./mosh all-tests.scm update
 	./mosh test/dbi.scm
 	./mosh test/srfi-misc.scm
 	./mosh test/lists.scm
-	./mosh -5 all-tests.scm
+	./mosh test/socket.scm
+	./mosh test/match.scm
 	(cd r6rs-test-suite && $(MAKE) $@)
 
 # For simplicity and to avoid depending on Google Test's
