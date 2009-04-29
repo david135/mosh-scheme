@@ -56,57 +56,57 @@ osConstants->set(Symbol::intern(UC("SHUT_WR")), Bignum::makeInteger((long int)SH
 #ifdef SHUT_RDWR
 osConstants->set(Symbol::intern(UC("SHUT_RDWR")), Bignum::makeInteger((long int)SHUT_RDWR));
 #endif
-osConstants->set(Symbol::intern(UC("sizeof:bool")), Bignum::makeInteger(sizeof(bool)));
-osConstants->set(Symbol::intern(UC("sizeof:short")), Bignum::makeInteger(sizeof(short)));
-osConstants->set(Symbol::intern(UC("sizeof:int")), Bignum::makeInteger(sizeof(int)));
-osConstants->set(Symbol::intern(UC("sizeof:long")), Bignum::makeInteger(sizeof(long)));
-osConstants->set(Symbol::intern(UC("sizeof:void*")), Bignum::makeInteger(sizeof(void*)));
-osConstants->set(Symbol::intern(UC("sizeof:size_t")), Bignum::makeInteger(sizeof(size_t)));
+osConstants->set(Symbol::intern(UC("size-of-bool")), Bignum::makeInteger(sizeof(bool)));
+osConstants->set(Symbol::intern(UC("size-of-short")), Bignum::makeInteger(sizeof(short)));
+osConstants->set(Symbol::intern(UC("size-of-int")), Bignum::makeInteger(sizeof(int)));
+osConstants->set(Symbol::intern(UC("size-of-long")), Bignum::makeInteger(sizeof(long)));
+osConstants->set(Symbol::intern(UC("size-of-void*")), Bignum::makeInteger(sizeof(void*)));
+osConstants->set(Symbol::intern(UC("size-of-size_t")), Bignum::makeInteger(sizeof(size_t)));
 {
     struct x { char y; bool z; };
-    osConstants->set(Symbol::intern(UC("alignof:bool")), Object::makeFixnum(offsetof(x, z)));
+    osConstants->set(Symbol::intern(UC("align-of-bool")), Object::makeFixnum(offsetof(x, z)));
 }
 {
     struct x { char y; short z; };
-    osConstants->set(Symbol::intern(UC("alignof:short")), Object::makeFixnum(offsetof(x, z)));
+    osConstants->set(Symbol::intern(UC("align-of-short")), Object::makeFixnum(offsetof(x, z)));
 }
 {
     struct x { char y; int z; };
-    osConstants->set(Symbol::intern(UC("alignof:int")), Object::makeFixnum(offsetof(x, z)));
+    osConstants->set(Symbol::intern(UC("align-of-int")), Object::makeFixnum(offsetof(x, z)));
 }
 {
     struct x { char y; long z; };
-    osConstants->set(Symbol::intern(UC("alignof:long")), Object::makeFixnum(offsetof(x, z)));
+    osConstants->set(Symbol::intern(UC("align-of-long")), Object::makeFixnum(offsetof(x, z)));
 }
 {
     struct x { char y; void* z; };
-    osConstants->set(Symbol::intern(UC("alignof:void*")), Object::makeFixnum(offsetof(x, z)));
+    osConstants->set(Symbol::intern(UC("align-of-void*")), Object::makeFixnum(offsetof(x, z)));
 }
 {
     struct x { char y; size_t z; };
-    osConstants->set(Symbol::intern(UC("alignof:size_t")), Object::makeFixnum(offsetof(x, z)));
+    osConstants->set(Symbol::intern(UC("align-of-size_t")), Object::makeFixnum(offsetof(x, z)));
 }
 {
     struct x { char y; float z; };
-    osConstants->set(Symbol::intern(UC("alignof:float")), Object::makeFixnum(offsetof(x, z)));
+    osConstants->set(Symbol::intern(UC("align-of-float")), Object::makeFixnum(offsetof(x, z)));
 }
 {
     struct x { char y; double z; };
-    osConstants->set(Symbol::intern(UC("alignof:double")), Object::makeFixnum(offsetof(x, z)));
+    osConstants->set(Symbol::intern(UC("align-of-double")), Object::makeFixnum(offsetof(x, z)));
 }
 {
     struct x { char y; int8_t z; };
-    osConstants->set(Symbol::intern(UC("alignof:int8_t")), Object::makeFixnum(offsetof(x, z)));
+    osConstants->set(Symbol::intern(UC("align-of-int8_t")), Object::makeFixnum(offsetof(x, z)));
 }
 {
     struct x { char y; int16_t z; };
-    osConstants->set(Symbol::intern(UC("alignof:int16_t")), Object::makeFixnum(offsetof(x, z)));
+    osConstants->set(Symbol::intern(UC("align-of-int16_t")), Object::makeFixnum(offsetof(x, z)));
 }
 {
     struct x { char y; int32_t z; };
-    osConstants->set(Symbol::intern(UC("alignof:int32_t")), Object::makeFixnum(offsetof(x, z)));
+    osConstants->set(Symbol::intern(UC("align-of-int32_t")), Object::makeFixnum(offsetof(x, z)));
 }
 {
     struct x { char y; int64_t z; };
-    osConstants->set(Symbol::intern(UC("alignof:int64_t")), Object::makeFixnum(offsetof(x, z)));
+    osConstants->set(Symbol::intern(UC("align-of-int64_t")), Object::makeFixnum(offsetof(x, z)));
 }
