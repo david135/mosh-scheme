@@ -56,12 +56,17 @@ osConstants->set(Symbol::intern(UC("SHUT_WR")), Bignum::makeInteger((long int)SH
 #ifdef SHUT_RDWR
 osConstants->set(Symbol::intern(UC("SHUT_RDWR")), Bignum::makeInteger((long int)SHUT_RDWR));
 #endif
+osConstants->set(Symbol::intern(UC("size-of-char")), Bignum::makeInteger(sizeof(char)));
 osConstants->set(Symbol::intern(UC("size-of-bool")), Bignum::makeInteger(sizeof(bool)));
 osConstants->set(Symbol::intern(UC("size-of-short")), Bignum::makeInteger(sizeof(short)));
 osConstants->set(Symbol::intern(UC("size-of-int")), Bignum::makeInteger(sizeof(int)));
 osConstants->set(Symbol::intern(UC("size-of-long")), Bignum::makeInteger(sizeof(long)));
 osConstants->set(Symbol::intern(UC("size-of-void*")), Bignum::makeInteger(sizeof(void*)));
 osConstants->set(Symbol::intern(UC("size-of-size_t")), Bignum::makeInteger(sizeof(size_t)));
+{
+    struct x { char y; char z; };
+    osConstants->set(Symbol::intern(UC("align-of-char")), Object::makeFixnum(offsetof(x, z)));
+}
 {
     struct x { char y; bool z; };
     osConstants->set(Symbol::intern(UC("align-of-bool")), Object::makeFixnum(offsetof(x, z)));
