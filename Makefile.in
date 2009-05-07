@@ -44,6 +44,7 @@ TESTS = test_object$(EXEEXT) test_vm$(EXEEXT) test_port$(EXEEXT) \
 @DEVELOPER_TRUE@	test_fasl$(EXEEXT) test_ffi$(EXEEXT) \
 @DEVELOPER_TRUE@	test_object$(EXEEXT) test_vm$(EXEEXT) \
 @DEVELOPER_TRUE@	test_compat$(EXEEXT) test_getopt$(EXEEXT)
+@MINGW32_TRUE@am__append_1 = mosh-icon.o
 check_PROGRAMS = test_object$(EXEEXT) test_vm$(EXEEXT) \
 	test_port$(EXEEXT) test_fasl$(EXEEXT) test_ffi$(EXEEXT) \
 	test_compat$(EXEEXT) test_getopt$(EXEEXT)
@@ -146,7 +147,7 @@ binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_mosh_OBJECTS = mosh-main.$(OBJEXT)
 mosh_OBJECTS = $(am_mosh_OBJECTS)
-mosh_DEPENDENCIES = libmosh.a $(GC_LIB) $(REGEXP_LIB)
+mosh_DEPENDENCIES = libmosh.a $(GC_LIB) $(REGEXP_LIB) $(am__append_1)
 mosh_LINK = $(CXXLD) $(mosh_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 am_test_compat_OBJECTS = test_compat-OSCompatTest.$(OBJEXT) \
@@ -388,7 +389,8 @@ mosh_SOURCES = main.cpp
 mosh_OPTS = -D MONA_SCHEME -D USE_BOEHM_GC -Wall -D MOSH_LIB_PATH="\"@MOSH_LIB_PATH@\"" -I $(includedir)
 mosh_CFLAGS = $(mosh_OPTS)  -g -D_FILE_OFFSET_BITS=64 -Wall -pipe @MOSH_OPTS@ $(DEBUG_FLAGS) -Wno-deprecated # temp -Wno-deprecated
 mosh_CXXFLAGS = $(mosh_CFLAGS)
-mosh_LDADD = libmosh.a $(GC_LIB) $(REGEXP_LIB) @MOSH_LDADD_ARCH@
+mosh_LDADD = libmosh.a $(GC_LIB) $(REGEXP_LIB) @MOSH_LDADD_ARCH@ \
+	$(am__append_1)
 noinst_LIBRARIES = libmosh.a
 libmosh_a_CXXFLAGS = $(mosh_CFLAGS) $(mosh_OPTS) -I$(GTEST_DIR) -I$(GTEST_DIR)/include
 libmosh_a_SOURCES = \
@@ -406,7 +408,6 @@ Callable.h                                                         \
 GenericMap.h                                                       \
 BinaryInputPort.h                                                  \
 BinaryOutputPort.h                                                 \
-config.h                                                           \
 scheme.h                                                           \
 ByteVector.h                                                       \
 HashTable.h                                                        \
@@ -628,7 +629,7 @@ data_DATA = all-tests.scm #repl.scm #tools/psyntax-r6rs/rev10_to_10/psyntax.scm
 nobase_data_DATA = ${mosh_core_libraries} #${mosh_core_fasl_libraries}
 PRECOMPILE_SRC = compiler-with-library.scmc pmatch.scmc psyntax.scmc
 INCLUDES = -I $(BOEHM_GC_DIR)/include -I $(ONIG_DIR)
-EXTRA_DIST = instruction.scm vm.scm library.scm compiler.scm free-vars.scm scripts pmatch.scm test-data.scm doc repl.scm tools/psyntax-r6rs/rev10_to_10/psyntax.scm r6rs-examples tools/psyntax-r6rs RELNOTE r6rs-test-suite example lib cprocedures.cpp labels.cpp all-tests.scm test call.inc.cpp ${GTEST_DIR} ffitest.c bench win mosh.vcproj mosh.sln logo r6rs-test-suite
+EXTRA_DIST = instruction.scm vm.scm library.scm compiler.scm free-vars.scm scripts pmatch.scm test-data.scm doc repl.scm tools/psyntax-r6rs/rev10_to_10/psyntax.scm r6rs-examples tools/psyntax-r6rs RELNOTE r6rs-test-suite example lib cprocedures.cpp labels.cpp all-tests.scm test call.inc.cpp ${GTEST_DIR} ffitest.c bench win mosh.vcproj mosh.sln logo r6rs-test-suite README-WINDOWS.txt README.MINGW
 GENERATED = \
 all-tests.scm Scanner.cpp NumberScanner.cpp psyntax.cpp  compiler-gauche.scm \
 DebugInstruction.h cprocedures.cpp      \
@@ -2893,6 +2894,8 @@ uninstall-am: uninstall-binPROGRAMS uninstall-binSCRIPTS \
 libffitest.so.1.0: ffitest.c
 	$(CC) -fPIC -c $<
 	$(CC) -Wl @SHLIB_SO_LDFLAGS@ -o $@ ffitest.o
+@MINGW32_TRUE@mosh-icon.o : win/mosh.rc logo/mosh.ico
+@MINGW32_TRUE@	$(WINDRES) win/mosh.rc -o mosh-icon.o
 
 #  N.B. We don't use backend's (gensym) for following reasons.
 #   (a) When we read serialize libraries, we need all symbols are interned.
@@ -3052,7 +3055,7 @@ gtest_main.a : gtest-all.o gtest_main.o
 	$(RANLIB) $@
 
 install-data-hook :
-	MOSH_GENSYM_PREFIX=I mosh ./scripts/pre-compile-r6rs.scm ./scripts/pre-compile-target.scm
+	MOSH_GENSYM_PREFIX=I @bindir@/mosh ./scripts/pre-compile-r6rs.scm ./scripts/pre-compile-target.scm
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

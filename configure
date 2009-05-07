@@ -4720,7 +4720,7 @@ fi
 $as_echo "no" >&6; }
 	;;
 esac
- if test x$ming32 = xtrue; then
+ if test x$mingw32 = xtrue; then
   MINGW32_TRUE=
   MINGW32_FALSE='#'
 else
