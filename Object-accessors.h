@@ -395,3 +395,39 @@ bool isSocket() const
     && reinterpret_cast<HeapObject*>(val)->type == HeapObject::Socket;
 }
 
+VM* toVM() const
+{
+    MOSH_ASSERT(isVM());
+    return reinterpret_cast<VM*>(reinterpret_cast<HeapObject*>(val)->obj);
+}
+
+bool isVM() const
+{
+    return isHeapObject()
+    && reinterpret_cast<HeapObject*>(val)->type == HeapObject::VM;
+}
+
+ConditionVariable* toConditionVariable() const
+{
+    MOSH_ASSERT(isConditionVariable());
+    return reinterpret_cast<ConditionVariable*>(reinterpret_cast<HeapObject*>(val)->obj);
+}
+
+bool isConditionVariable() const
+{
+    return isHeapObject()
+    && reinterpret_cast<HeapObject*>(val)->type == HeapObject::ConditionVariable;
+}
+
+Mutex* toMutex() const
+{
+    MOSH_ASSERT(isMutex());
+    return reinterpret_cast<Mutex*>(reinterpret_cast<HeapObject*>(val)->obj);
+}
+
+bool isMutex() const
+{
+    return isHeapObject()
+    && reinterpret_cast<HeapObject*>(val)->type == HeapObject::Mutex;
+}
+

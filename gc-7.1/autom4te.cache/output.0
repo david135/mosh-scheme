@@ -4879,10 +4879,7 @@ test -z "$INSTALL_DATA" && INSTALL_DATA='${INSTALL} -m 644'
 
 ## Mosh start
 gc_cflags="${gc_cflags} -fomit-frame-pointer -DUSE_I686_PREFETCH"
-cat >>confdefs.h <<\_ACEOF
-@%:@define DONT_ADD_BYTE_AT_END 1
-_ACEOF
- ## N.B. gc-7.1 has bug about this. Use patch by Hans Boehm
+##AC_DEFINE(DONT_ADD_BYTE_AT_END) ## N.B. gc-7.1 has bug about this. Use patch by Hans Boehm
 cat >>confdefs.h <<\_ACEOF
 @%:@define LARGE_CONFIG 1
 _ACEOF
@@ -4916,10 +4913,21 @@ fi
 case "$host" in
  *-*-freebsd*)
    ;;
+ *-*-darwin*)
+   THREADS=posix
+   { $as_echo "$as_me:$LINENO: result: $THREADS" >&5
+$as_echo "$THREADS" >&6; }
+   ;;
+ *-*-linux*)
+   THREADS=posix
+   { $as_echo "$as_me:$LINENO: result: $THREADS" >&5
+$as_echo "$THREADS" >&6; }
+   ;;
  *)
    THREADS=no
    ;;
 esac
+
 ## MOSH end
 
 @%:@ Check whether --enable-parallel-mark was given.

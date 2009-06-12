@@ -38,16 +38,17 @@ host_triplet = @host@
 target_triplet = @target@
 TESTS = test_object$(EXEEXT) test_vm$(EXEEXT) test_port$(EXEEXT) \
 	test_fasl$(EXEEXT) test_ffi$(EXEEXT) test_compat$(EXEEXT) \
-	test_getopt$(EXEEXT)
+	test_getopt$(EXEEXT) test_thread$(EXEEXT)
 @DEVELOPER_FALSE@bin_PROGRAMS = mosh$(EXEEXT)
 @DEVELOPER_TRUE@bin_PROGRAMS = mosh$(EXEEXT) test_port$(EXEEXT) \
 @DEVELOPER_TRUE@	test_fasl$(EXEEXT) test_ffi$(EXEEXT) \
 @DEVELOPER_TRUE@	test_object$(EXEEXT) test_vm$(EXEEXT) \
-@DEVELOPER_TRUE@	test_compat$(EXEEXT) test_getopt$(EXEEXT)
+@DEVELOPER_TRUE@	test_compat$(EXEEXT) test_getopt$(EXEEXT) \
+@DEVELOPER_TRUE@	test_thread$(EXEEXT)
 @MINGW32_TRUE@am__append_1 = mosh-icon.o
 check_PROGRAMS = test_object$(EXEEXT) test_vm$(EXEEXT) \
 	test_port$(EXEEXT) test_fasl$(EXEEXT) test_ffi$(EXEEXT) \
-	test_compat$(EXEEXT) test_getopt$(EXEEXT)
+	test_compat$(EXEEXT) test_getopt$(EXEEXT) test_thread$(EXEEXT)
 subdir = .
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
@@ -138,8 +139,11 @@ am_libmosh_a_OBJECTS = libmosh_a-Transcoder.$(OBJEXT) \
 	libmosh_a-SocketBinaryInputOutputPort.$(OBJEXT) \
 	libmosh_a-TranscodedTextualInputOutputPort.$(OBJEXT) \
 	libmosh_a-BufferedFileBinaryInputOutputPort.$(OBJEXT) \
-	libmosh_a-getoptU.$(OBJEXT) libmosh_a-OSCompatSocket.$(OBJEXT) \
-	libmosh_a-OSCompat.$(OBJEXT)
+	libmosh_a-getoptU.$(OBJEXT) \
+	libmosh_a-MultiVMProcedures.$(OBJEXT) \
+	libmosh_a-OSCompatSocket.$(OBJEXT) \
+	libmosh_a-OSCompatThread.$(OBJEXT) \
+	libmosh_a-VMFactory.$(OBJEXT) libmosh_a-OSCompat.$(OBJEXT)
 libmosh_a_OBJECTS = $(am_libmosh_a_OBJECTS)
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" \
 	"$(DESTDIR)$(datadir)" "$(DESTDIR)$(datadir)"
@@ -183,6 +187,11 @@ am_test_port_OBJECTS = test_port-PortTest.$(OBJEXT) \
 test_port_OBJECTS = $(am_test_port_OBJECTS)
 test_port_LINK = $(CXXLD) $(test_port_CXXFLAGS) $(CXXFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+am_test_thread_OBJECTS = test_thread-OSCompatThreadTest.$(OBJEXT) \
+	test_thread-TestingSignalHandler.$(OBJEXT)
+test_thread_OBJECTS = $(am_test_thread_OBJECTS)
+test_thread_LINK = $(CXXLD) $(test_thread_CXXFLAGS) $(CXXFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 am_test_vm_OBJECTS = test_vm-VMTest.$(OBJEXT) \
 	test_vm-TestingVM.$(OBJEXT) \
 	test_vm-TestingSignalHandler.$(OBJEXT)
@@ -206,11 +215,12 @@ LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 SOURCES = $(libmosh_a_SOURCES) $(mosh_SOURCES) $(test_compat_SOURCES) \
 	$(test_fasl_SOURCES) $(test_ffi_SOURCES) \
 	$(test_getopt_SOURCES) $(test_object_SOURCES) \
-	$(test_port_SOURCES) $(test_vm_SOURCES)
+	$(test_port_SOURCES) $(test_thread_SOURCES) $(test_vm_SOURCES)
 DIST_SOURCES = $(libmosh_a_SOURCES) $(mosh_SOURCES) \
 	$(test_compat_SOURCES) $(test_fasl_SOURCES) \
 	$(test_ffi_SOURCES) $(test_getopt_SOURCES) \
-	$(test_object_SOURCES) $(test_port_SOURCES) $(test_vm_SOURCES)
+	$(test_object_SOURCES) $(test_port_SOURCES) \
+	$(test_thread_SOURCES) $(test_vm_SOURCES)
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	html-recursive info-recursive install-data-recursive \
 	install-dvi-recursive install-exec-recursive \
@@ -509,12 +519,16 @@ StandardInputPort.h \
 BlockBufferedFileBinaryOutputPort.h \
 BlockBufferedFileBinaryInputOutputPort.h \
 LineBufferedFileBinaryInputOutputPort.h \
+MultiVMProcedures.h MultiVMProcedures.cpp \
 OSCompatSocket.h OSCompatSocket.cpp \
+OSCompatThread.h OSCompatThread.cpp \
+VMFactory.cpp VMFactory.h \
 OSCompat.h OSCompat.cpp
 
 mosh_core_libraries = \
 lib/match.ss \
 lib/lambda/wiki.ss    \
+lib/mosh/queue.ss    \
 lib/mosh/ffi.ss    \
 lib/mosh/dbi.ss    \
 lib/mosh/mysql.ss    \
@@ -526,6 +540,7 @@ lib/mosh/dbd/mysql.ss  \
 lib/mosh/test.ss   \
 lib/mosh/pp.ss     \
 lib/mosh/control.ss     \
+lib/mosh/concurrent.ss     \
 lib/mosh/config.ss \
 lib/mosh/cgi.ss  \
 lib/clos/core.ss  lib/clos/helpers.ss  lib/clos/introspection.ss  lib/clos/slot-access.ss  lib/clos/user.ss \
@@ -687,6 +702,10 @@ test_getopt_DEPENDENCIES = $(TEST_DEPENDENCIES_)
 test_getopt_CXXFLAGS = $(TEST_CXXFLAGS_)
 test_getopt_SOURCES = getoptUTest.cpp TestingSignalHandler.cpp
 test_getopt_LDADD = $(TEST_LDADD_)
+test_thread_DEPENDENCIES = $(TEST_DEPENDENCIES_)
+test_thread_CXXFLAGS = $(TEST_CXXFLAGS_)
+test_thread_SOURCES = OSCompatThreadTest.cpp TestingSignalHandler.cpp
+test_thread_LDADD = $(TEST_LDADD_)
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
@@ -804,6 +823,9 @@ test_object$(EXEEXT): $(test_object_OBJECTS) $(test_object_DEPENDENCIES)
 test_port$(EXEEXT): $(test_port_OBJECTS) $(test_port_DEPENDENCIES) 
 	@rm -f test_port$(EXEEXT)
 	$(test_port_LINK) $(test_port_OBJECTS) $(test_port_LDADD) $(LIBS)
+test_thread$(EXEEXT): $(test_thread_OBJECTS) $(test_thread_DEPENDENCIES) 
+	@rm -f test_thread$(EXEEXT)
+	$(test_thread_LINK) $(test_thread_OBJECTS) $(test_thread_LDADD) $(LIBS)
 test_vm$(EXEEXT): $(test_vm_OBJECTS) $(test_vm_DEPENDENCIES) 
 	@rm -f test_vm$(EXEEXT)
 	$(test_vm_LINK) $(test_vm_OBJECTS) $(test_vm_LDADD) $(LIBS)
@@ -874,11 +896,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-HashTableProceduures.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-Latin1Codec.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-ListProcedures.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-MultiVMProcedures.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-NumberReader.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-NumberReader.tab.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-NumberScanner.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-OSCompat.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-OSCompatSocket.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-OSCompatThread.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-Object.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-PortProcedures.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-ProcessProcedures.Po@am__quote@
@@ -913,6 +937,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-VM-Profiler.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-VM-Run.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-VM.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-VMFactory.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-Vector.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-getoptU.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmosh_a-scheme.Po@am__quote@
@@ -932,6 +957,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_object-TestingSignalHandler.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_port-PortTest.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_port-TestingSignalHandler.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_thread-OSCompatThreadTest.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_thread-TestingSignalHandler.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_vm-TestingSignalHandler.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_vm-TestingVM.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_vm-VMTest.Po@am__quote@
@@ -2098,6 +2125,20 @@ libmosh_a-getoptU.obj: getoptU.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -c -o libmosh_a-getoptU.obj `if test -f 'getoptU.cpp'; then $(CYGPATH_W) 'getoptU.cpp'; else $(CYGPATH_W) '$(srcdir)/getoptU.cpp'; fi`
 
+libmosh_a-MultiVMProcedures.o: MultiVMProcedures.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -MT libmosh_a-MultiVMProcedures.o -MD -MP -MF $(DEPDIR)/libmosh_a-MultiVMProcedures.Tpo -c -o libmosh_a-MultiVMProcedures.o `test -f 'MultiVMProcedures.cpp' || echo '$(srcdir)/'`MultiVMProcedures.cpp
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmosh_a-MultiVMProcedures.Tpo $(DEPDIR)/libmosh_a-MultiVMProcedures.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='MultiVMProcedures.cpp' object='libmosh_a-MultiVMProcedures.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -c -o libmosh_a-MultiVMProcedures.o `test -f 'MultiVMProcedures.cpp' || echo '$(srcdir)/'`MultiVMProcedures.cpp
+
+libmosh_a-MultiVMProcedures.obj: MultiVMProcedures.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -MT libmosh_a-MultiVMProcedures.obj -MD -MP -MF $(DEPDIR)/libmosh_a-MultiVMProcedures.Tpo -c -o libmosh_a-MultiVMProcedures.obj `if test -f 'MultiVMProcedures.cpp'; then $(CYGPATH_W) 'MultiVMProcedures.cpp'; else $(CYGPATH_W) '$(srcdir)/MultiVMProcedures.cpp'; fi`
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmosh_a-MultiVMProcedures.Tpo $(DEPDIR)/libmosh_a-MultiVMProcedures.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='MultiVMProcedures.cpp' object='libmosh_a-MultiVMProcedures.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -c -o libmosh_a-MultiVMProcedures.obj `if test -f 'MultiVMProcedures.cpp'; then $(CYGPATH_W) 'MultiVMProcedures.cpp'; else $(CYGPATH_W) '$(srcdir)/MultiVMProcedures.cpp'; fi`
+
 libmosh_a-OSCompatSocket.o: OSCompatSocket.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -MT libmosh_a-OSCompatSocket.o -MD -MP -MF $(DEPDIR)/libmosh_a-OSCompatSocket.Tpo -c -o libmosh_a-OSCompatSocket.o `test -f 'OSCompatSocket.cpp' || echo '$(srcdir)/'`OSCompatSocket.cpp
 @am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmosh_a-OSCompatSocket.Tpo $(DEPDIR)/libmosh_a-OSCompatSocket.Po
@@ -2111,6 +2152,34 @@ libmosh_a-OSCompatSocket.obj: OSCompatSocket.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='OSCompatSocket.cpp' object='libmosh_a-OSCompatSocket.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -c -o libmosh_a-OSCompatSocket.obj `if test -f 'OSCompatSocket.cpp'; then $(CYGPATH_W) 'OSCompatSocket.cpp'; else $(CYGPATH_W) '$(srcdir)/OSCompatSocket.cpp'; fi`
+
+libmosh_a-OSCompatThread.o: OSCompatThread.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -MT libmosh_a-OSCompatThread.o -MD -MP -MF $(DEPDIR)/libmosh_a-OSCompatThread.Tpo -c -o libmosh_a-OSCompatThread.o `test -f 'OSCompatThread.cpp' || echo '$(srcdir)/'`OSCompatThread.cpp
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmosh_a-OSCompatThread.Tpo $(DEPDIR)/libmosh_a-OSCompatThread.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='OSCompatThread.cpp' object='libmosh_a-OSCompatThread.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -c -o libmosh_a-OSCompatThread.o `test -f 'OSCompatThread.cpp' || echo '$(srcdir)/'`OSCompatThread.cpp
+
+libmosh_a-OSCompatThread.obj: OSCompatThread.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -MT libmosh_a-OSCompatThread.obj -MD -MP -MF $(DEPDIR)/libmosh_a-OSCompatThread.Tpo -c -o libmosh_a-OSCompatThread.obj `if test -f 'OSCompatThread.cpp'; then $(CYGPATH_W) 'OSCompatThread.cpp'; else $(CYGPATH_W) '$(srcdir)/OSCompatThread.cpp'; fi`
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmosh_a-OSCompatThread.Tpo $(DEPDIR)/libmosh_a-OSCompatThread.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='OSCompatThread.cpp' object='libmosh_a-OSCompatThread.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -c -o libmosh_a-OSCompatThread.obj `if test -f 'OSCompatThread.cpp'; then $(CYGPATH_W) 'OSCompatThread.cpp'; else $(CYGPATH_W) '$(srcdir)/OSCompatThread.cpp'; fi`
+
+libmosh_a-VMFactory.o: VMFactory.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -MT libmosh_a-VMFactory.o -MD -MP -MF $(DEPDIR)/libmosh_a-VMFactory.Tpo -c -o libmosh_a-VMFactory.o `test -f 'VMFactory.cpp' || echo '$(srcdir)/'`VMFactory.cpp
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmosh_a-VMFactory.Tpo $(DEPDIR)/libmosh_a-VMFactory.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='VMFactory.cpp' object='libmosh_a-VMFactory.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -c -o libmosh_a-VMFactory.o `test -f 'VMFactory.cpp' || echo '$(srcdir)/'`VMFactory.cpp
+
+libmosh_a-VMFactory.obj: VMFactory.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -MT libmosh_a-VMFactory.obj -MD -MP -MF $(DEPDIR)/libmosh_a-VMFactory.Tpo -c -o libmosh_a-VMFactory.obj `if test -f 'VMFactory.cpp'; then $(CYGPATH_W) 'VMFactory.cpp'; else $(CYGPATH_W) '$(srcdir)/VMFactory.cpp'; fi`
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmosh_a-VMFactory.Tpo $(DEPDIR)/libmosh_a-VMFactory.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='VMFactory.cpp' object='libmosh_a-VMFactory.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -c -o libmosh_a-VMFactory.obj `if test -f 'VMFactory.cpp'; then $(CYGPATH_W) 'VMFactory.cpp'; else $(CYGPATH_W) '$(srcdir)/VMFactory.cpp'; fi`
 
 libmosh_a-OSCompat.o: OSCompat.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmosh_a_CXXFLAGS) $(CXXFLAGS) -MT libmosh_a-OSCompat.o -MD -MP -MF $(DEPDIR)/libmosh_a-OSCompat.Tpo -c -o libmosh_a-OSCompat.o `test -f 'OSCompat.cpp' || echo '$(srcdir)/'`OSCompat.cpp
@@ -2335,6 +2404,34 @@ test_port-TestingSignalHandler.obj: TestingSignalHandler.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='TestingSignalHandler.cpp' object='test_port-TestingSignalHandler.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_port_CXXFLAGS) $(CXXFLAGS) -c -o test_port-TestingSignalHandler.obj `if test -f 'TestingSignalHandler.cpp'; then $(CYGPATH_W) 'TestingSignalHandler.cpp'; else $(CYGPATH_W) '$(srcdir)/TestingSignalHandler.cpp'; fi`
+
+test_thread-OSCompatThreadTest.o: OSCompatThreadTest.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_thread_CXXFLAGS) $(CXXFLAGS) -MT test_thread-OSCompatThreadTest.o -MD -MP -MF $(DEPDIR)/test_thread-OSCompatThreadTest.Tpo -c -o test_thread-OSCompatThreadTest.o `test -f 'OSCompatThreadTest.cpp' || echo '$(srcdir)/'`OSCompatThreadTest.cpp
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/test_thread-OSCompatThreadTest.Tpo $(DEPDIR)/test_thread-OSCompatThreadTest.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='OSCompatThreadTest.cpp' object='test_thread-OSCompatThreadTest.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_thread_CXXFLAGS) $(CXXFLAGS) -c -o test_thread-OSCompatThreadTest.o `test -f 'OSCompatThreadTest.cpp' || echo '$(srcdir)/'`OSCompatThreadTest.cpp
+
+test_thread-OSCompatThreadTest.obj: OSCompatThreadTest.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_thread_CXXFLAGS) $(CXXFLAGS) -MT test_thread-OSCompatThreadTest.obj -MD -MP -MF $(DEPDIR)/test_thread-OSCompatThreadTest.Tpo -c -o test_thread-OSCompatThreadTest.obj `if test -f 'OSCompatThreadTest.cpp'; then $(CYGPATH_W) 'OSCompatThreadTest.cpp'; else $(CYGPATH_W) '$(srcdir)/OSCompatThreadTest.cpp'; fi`
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/test_thread-OSCompatThreadTest.Tpo $(DEPDIR)/test_thread-OSCompatThreadTest.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='OSCompatThreadTest.cpp' object='test_thread-OSCompatThreadTest.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_thread_CXXFLAGS) $(CXXFLAGS) -c -o test_thread-OSCompatThreadTest.obj `if test -f 'OSCompatThreadTest.cpp'; then $(CYGPATH_W) 'OSCompatThreadTest.cpp'; else $(CYGPATH_W) '$(srcdir)/OSCompatThreadTest.cpp'; fi`
+
+test_thread-TestingSignalHandler.o: TestingSignalHandler.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_thread_CXXFLAGS) $(CXXFLAGS) -MT test_thread-TestingSignalHandler.o -MD -MP -MF $(DEPDIR)/test_thread-TestingSignalHandler.Tpo -c -o test_thread-TestingSignalHandler.o `test -f 'TestingSignalHandler.cpp' || echo '$(srcdir)/'`TestingSignalHandler.cpp
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/test_thread-TestingSignalHandler.Tpo $(DEPDIR)/test_thread-TestingSignalHandler.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='TestingSignalHandler.cpp' object='test_thread-TestingSignalHandler.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_thread_CXXFLAGS) $(CXXFLAGS) -c -o test_thread-TestingSignalHandler.o `test -f 'TestingSignalHandler.cpp' || echo '$(srcdir)/'`TestingSignalHandler.cpp
+
+test_thread-TestingSignalHandler.obj: TestingSignalHandler.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_thread_CXXFLAGS) $(CXXFLAGS) -MT test_thread-TestingSignalHandler.obj -MD -MP -MF $(DEPDIR)/test_thread-TestingSignalHandler.Tpo -c -o test_thread-TestingSignalHandler.obj `if test -f 'TestingSignalHandler.cpp'; then $(CYGPATH_W) 'TestingSignalHandler.cpp'; else $(CYGPATH_W) '$(srcdir)/TestingSignalHandler.cpp'; fi`
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/test_thread-TestingSignalHandler.Tpo $(DEPDIR)/test_thread-TestingSignalHandler.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='TestingSignalHandler.cpp' object='test_thread-TestingSignalHandler.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_thread_CXXFLAGS) $(CXXFLAGS) -c -o test_thread-TestingSignalHandler.obj `if test -f 'TestingSignalHandler.cpp'; then $(CYGPATH_W) 'TestingSignalHandler.cpp'; else $(CYGPATH_W) '$(srcdir)/TestingSignalHandler.cpp'; fi`
 
 test_vm-VMTest.o: VMTest.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_vm_CXXFLAGS) $(CXXFLAGS) -MT test_vm-VMTest.o -MD -MP -MF $(DEPDIR)/test_vm-VMTest.Tpo -c -o test_vm-VMTest.o `test -f 'VMTest.cpp' || echo '$(srcdir)/'`VMTest.cpp
@@ -2904,10 +3001,14 @@ libffitest.so.1.0: ffitest.c
 #   (b) When we precompile system libraries, we want to control the start index of gensym.
 #       Since we should avoid index overlapping between pre-compile libraries and pre-compiled psyntax.
 #       So using environment variable MOSH_GENSYM_PREFIX, we control the prefix.
-update:
-	(find . -name "*.ss.fasl" | xargs rm) ; true
-	(find . -name "*.sls.fasl" | xargs rm) ; true
+
+# all fasl should be newer than *.ss and psyntax.h binary
+lib/mosh/queue.ss.mosh-fasl: $(mosh_core_libraries) psyntax.h
+	(find . -name "*.ss.mosh-fasl" | xargs rm) ; true
+	(find . -name "*.sls.mosh-fasl" | xargs rm) ; true
 	MOSH_GENSYM_PREFIX=L ./mosh scripts/pre-compile-r6rs.scm scripts/pre-compile-target.scm
+
+update: lib/mosh/queue.ss.mosh-fasl
 
 # when you release comment out start
 @DEVELOPER_TRUE@Reader.tab.cpp: Reader.y
@@ -3016,6 +3117,7 @@ check: test
 test: ./mosh all-tests.scm update libffitest.so.1.0
 	./mosh -5 all-tests.scm
 	./mosh test/testing.scm
+	./mosh test/mosh-test.scm
 	./mosh test/io-error.scm
 	./mosh test/input-output-port.scm
 	./mosh test/input-port.scm
@@ -3036,6 +3138,8 @@ test: ./mosh all-tests.scm update libffitest.so.1.0
 	./mosh test/socket.scm
 	./mosh test/match.scm
 	./mosh test/print.scm
+	./mosh test/concurrent.scm
+	./mosh test/concurrent-crash.scm
 	(cd r6rs-test-suite && $(MAKE) $@)
 
 # For simplicity and to avoid depending on Google Test's
@@ -3056,7 +3160,7 @@ gtest_main.a : gtest-all.o gtest_main.o
 	$(RANLIB) $@
 
 install-data-hook :
-	MOSH_GENSYM_PREFIX=I @bindir@/mosh ./scripts/pre-compile-r6rs.scm ./scripts/pre-compile-target.scm
+	MOSH_GENSYM_PREFIX=I MOSH_LOADPATH=${DESTDIR}${datadir}/lib $(DESTDIR)/@bindir@/mosh ./scripts/pre-compile-r6rs.scm ./scripts/pre-compile-target.scm
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
