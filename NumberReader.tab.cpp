@@ -255,7 +255,7 @@ typedef short int yytype_int16;
 #define YYSIZE_MAXIMUM ((YYSIZE_T) -1)
 
 #ifndef YY_
-# if YYENABLE_NLS
+# if defined YYENABLE_NLS && YYENABLE_NLS
 #  if ENABLE_NLS
 #   include <libintl.h> /* INFRINGES ON USER NAME SPACE */
 #   define YY_(msgid) dgettext ("bison-runtime", msgid)
@@ -554,9 +554,9 @@ static const yytype_uint16 yyrline[] =
      227,   237,   238,   241,   242,   247,   248,   251,   253,   254,
      255,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   269,   270,   271,   272,   275,   276,   286,   287,
-     290,   297,   308,   319,   331,   333,   338,   345,   346,   349,
-     350,   351,   354,   355,   362,   363,   366,   367,   368,   371,
-     372,   375,   376,   379,   380
+     290,   297,   308,   322,   336,   338,   343,   350,   351,   354,
+     355,   356,   359,   360,   367,   368,   371,   372,   373,   376,
+     377,   380,   381,   384,   385
 };
 #endif
 
@@ -888,7 +888,7 @@ while (YYID (0))
    we won't break user code: when these are the locations we know.  */
 
 #ifndef YY_LOCATION_PRINT
-# if YYLTYPE_IS_TRIVIAL
+# if defined YYLTYPE_IS_TRIVIAL && YYLTYPE_IS_TRIVIAL
 #  define YY_LOCATION_PRINT(File, Loc)			\
      fprintf (File, "%d.%d-%d.%d",			\
 	      (Loc).first_line, (Loc).first_column,	\
@@ -2118,36 +2118,41 @@ yyreduce:
     {
               ucs4string ret = (yyvsp[(1) - (4)].stringValue);
               ret += UC(".") + (yyvsp[(3) - (4)].stringValue);
+              printf("%s %s:%d\n", __func__, __FILE__, __LINE__);fflush(stdout);// debug
               if (!(yyvsp[(4) - (4)].stringValue).empty()) {
-//                  VM_LOG2("from~a: ~a\n", Flonum::fromString(ret), suffixToNumber($4));
-                (yyval.object) = Arithmetic::mul(Flonum::fromString(ret), suffixToNumber((yyvsp[(4) - (4)].stringValue)));
-//                  VM_LOG1("$$~a: n", $$);
+                  printf("%s %s:%d\n", __func__, __FILE__, __LINE__);fflush(stdout);// debug
+//                $$ = Arithmetic::mul(Flonum::fromString(ret), suffixToNumber($4));
+                  ret += (yyvsp[(4) - (4)].stringValue);
+                (yyval.object) = Flonum::fromString(ret);
               } else {
-                  (yyval.object) = Flonum::fromString(ret);
+                  printf("%s %s:%d\n", __func__, __FILE__, __LINE__);fflush(stdout);// debug
+                (yyval.object) = Flonum::fromString(ret);
               }
           ;}
     break;
 
   case 113:
-#line 319 "NumberReader.y"
+#line 322 "NumberReader.y"
     {
               ucs4string ret = (yyvsp[(1) - (3)].stringValue);
               ret += UC(".0");
               if (!(yyvsp[(3) - (3)].stringValue).empty()) {
+                  printf("%s %s:%d\n", __func__, __FILE__, __LINE__);fflush(stdout);// debug
                 (yyval.object) = Arithmetic::mul(Flonum::fromString(ret), suffixToNumber((yyvsp[(3) - (3)].stringValue)));
               } else {
+                  printf("%s %s:%d\n", __func__, __FILE__, __LINE__);fflush(stdout);// debug
                   (yyval.object) = Flonum::fromString(ret);
               }
           ;}
     break;
 
   case 114:
-#line 331 "NumberReader.y"
+#line 336 "NumberReader.y"
     { (yyval.object) = Bignum::makeInteger((yyvsp[(1) - (1)].stringValue)); ;}
     break;
 
   case 115:
-#line 333 "NumberReader.y"
+#line 338 "NumberReader.y"
     {
                 const ucs4char ch = '0' + (yyvsp[(1) - (1)].intValue);
                 (yyval.stringValue) = UC("");
@@ -2156,7 +2161,7 @@ yyreduce:
     break;
 
   case 116:
-#line 338 "NumberReader.y"
+#line 343 "NumberReader.y"
     {
                const ucs4char ch = '0' + (yyvsp[(2) - (2)].intValue);
                (yyval.stringValue) = (yyvsp[(1) - (2)].stringValue);
@@ -2165,32 +2170,32 @@ yyreduce:
     break;
 
   case 118:
-#line 346 "NumberReader.y"
+#line 351 "NumberReader.y"
     { (yyval.intValue) = (yyvsp[(1) - (1)].intValue); ;}
     break;
 
   case 119:
-#line 349 "NumberReader.y"
+#line 354 "NumberReader.y"
     { (yyval.exactValue) = 0; ;}
     break;
 
   case 120:
-#line 350 "NumberReader.y"
+#line 355 "NumberReader.y"
     { (yyval.exactValue) = 1; ;}
     break;
 
   case 121:
-#line 351 "NumberReader.y"
+#line 356 "NumberReader.y"
     { (yyval.exactValue) = -1; ;}
     break;
 
   case 122:
-#line 354 "NumberReader.y"
+#line 359 "NumberReader.y"
     { (yyval.stringValue) = UC(""); ;}
     break;
 
   case 123:
-#line 355 "NumberReader.y"
+#line 360 "NumberReader.y"
     {
               ucs4string ret = UC("e");
               ret += (yyvsp[(1) - (1)].stringValue).substr(1, (yyvsp[(1) - (1)].stringValue).size() - 1);
@@ -2199,58 +2204,58 @@ yyreduce:
     break;
 
   case 124:
-#line 362 "NumberReader.y"
+#line 367 "NumberReader.y"
     { (yyval.exactValue) = (yyvsp[(2) - (2)].exactValue); ;}
     break;
 
   case 125:
-#line 363 "NumberReader.y"
+#line 368 "NumberReader.y"
     { (yyval.exactValue) = (yyvsp[(1) - (2)].exactValue); ;}
     break;
 
   case 126:
-#line 366 "NumberReader.y"
-    { (yyval.exactValue) = (yyvsp[(2) - (2)].exactValue);;}
-    break;
-
-  case 127:
-#line 367 "NumberReader.y"
-    { (yyval.exactValue) = (yyvsp[(1) - (2)].exactValue);;}
-    break;
-
-  case 129:
 #line 371 "NumberReader.y"
     { (yyval.exactValue) = (yyvsp[(2) - (2)].exactValue);;}
     break;
 
-  case 130:
+  case 127:
 #line 372 "NumberReader.y"
     { (yyval.exactValue) = (yyvsp[(1) - (2)].exactValue);;}
     break;
 
+  case 129:
+#line 376 "NumberReader.y"
+    { (yyval.exactValue) = (yyvsp[(2) - (2)].exactValue);;}
+    break;
+
+  case 130:
+#line 377 "NumberReader.y"
+    { (yyval.exactValue) = (yyvsp[(1) - (2)].exactValue);;}
+    break;
+
   case 131:
-#line 375 "NumberReader.y"
+#line 380 "NumberReader.y"
     { (yyval.exactValue) = (yyvsp[(2) - (2)].exactValue);;}
     break;
 
   case 132:
-#line 376 "NumberReader.y"
+#line 381 "NumberReader.y"
     { (yyval.exactValue) = (yyvsp[(1) - (2)].exactValue);;}
     break;
 
   case 133:
-#line 379 "NumberReader.y"
+#line 384 "NumberReader.y"
     { (yyval.object) = Flonum::NOT_A_NUMBER; ;}
     break;
 
   case 134:
-#line 380 "NumberReader.y"
+#line 385 "NumberReader.y"
     { (yyval.object) = Flonum::POSITIVE_INF; ;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 2254 "NumberReader.tab.cpp"
+#line 2259 "NumberReader.tab.cpp"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2464,7 +2469,7 @@ yyreturn:
 }
 
 
-#line 381 "NumberReader.y"
+#line 386 "NumberReader.y"
 
 
 extern ucs4char* token;
