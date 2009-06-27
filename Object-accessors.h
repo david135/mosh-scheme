@@ -431,3 +431,15 @@ bool isMutex() const
     && reinterpret_cast<HeapObject*>(val)->type == HeapObject::Mutex;
 }
 
+Pointer* toPointer() const
+{
+    MOSH_ASSERT(isPointer());
+    return reinterpret_cast<Pointer*>(reinterpret_cast<HeapObject*>(val)->obj);
+}
+
+bool isPointer() const
+{
+    return isHeapObject()
+    && reinterpret_cast<HeapObject*>(val)->type == HeapObject::Pointer;
+}
+
