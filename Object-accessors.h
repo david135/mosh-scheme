@@ -443,3 +443,15 @@ bool isPointer() const
     && reinterpret_cast<HeapObject*>(val)->type == HeapObject::Pointer;
 }
 
+SimpleStruct* toSimpleStruct() const
+{
+    MOSH_ASSERT(isSimpleStruct());
+    return reinterpret_cast<SimpleStruct*>(reinterpret_cast<HeapObject*>(val)->obj);
+}
+
+bool isSimpleStruct() const
+{
+    return isHeapObject()
+    && reinterpret_cast<HeapObject*>(val)->type == HeapObject::SimpleStruct;
+}
+
