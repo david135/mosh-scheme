@@ -113,7 +113,8 @@ public:
         REFER_LOCAL_CALL = 3214,
         LOCAL_CALL = 3246,
         VECTOR = 3278,
-        INSTRUCTION_COUNT = 103,
+        SIMPLE_STRUCT_REF = 3310,
+        INSTRUCTION_COUNT = 104,
     };
     static const ucs4char* toString(int val) {
         switch(val) {
@@ -425,6 +426,9 @@ public:
            break;
         case VECTOR:
            return UC("VECTOR");
+           break;
+        case SIMPLE_STRUCT_REF:
+           return UC("SIMPLE_STRUCT_REF");
            break;
         default:
            return UC("Unkown Instruction");
