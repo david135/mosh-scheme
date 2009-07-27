@@ -4577,9 +4577,16 @@ _ACEOF
   ;;
 
 mingw*)
-  { { $as_echo "$as_me:$LINENO: error: Please modify configure.ac for mingw" >&5
-$as_echo "$as_me: error: Please modify configure.ac for mingw" >&2;}
-   { (exit 1); exit 1; }; }
+
+cat >>confdefs.h <<\_ACEOF
+#define GC_THREADS 1
+_ACEOF
+ # FIXME
+
+cat >>confdefs.h <<\_ACEOF
+#define _REENTRANT 1
+_ACEOF
+ # FIXME
   ;;
 *)
   { { $as_echo "$as_me:$LINENO: error: Please modify configure.ac for $target_os" >&5
@@ -4648,7 +4655,7 @@ _ACEOF
          MOSH_LDADD_ARCH="-lpthread"
          ;;
        *mingw*)
-         MOSH_OPTS="$MOSH_GENERIC_OPTS -DMOSH_MINGW32 -D_UNICODE -DUNICODE -DWINVER=0x501 -D_WIN32_WINNT=0x501"
+         MOSH_OPTS="$MOSH_GENERIC_OPTS -mtune=generic -DMOSH_MINGW32 -D_UNICODE -DUNICODE -DWINVER=0x501 -D_WIN32_WINNT=0x501" #forcing WinXP & Gcc > 4.2
          MOSH_LDADD_ARCH="-lshlwapi -lshell32 -lws2_32"
          ;;
         *)
@@ -4666,7 +4673,7 @@ _ACEOF
         ;;
 x86?64*)
         arch=x86_64
-        MOSH_OPTS="-O3 -momit-leaf-frame-pointer -fomit-frame-pointer -msse3 -mfpmath=sse"
+        MOSH_OPTS="-O3 -momit-leaf-frame-pointer -fomit-frame-pointer"
         { $as_echo "$as_me:$LINENO: result: x86_64" >&5
 $as_echo "x86_64" >&6; }
 

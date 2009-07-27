@@ -6,7 +6,7 @@
 /* Define for the IA32 architecture. */
 #undef ARCH_IA32
 
-/* Define for the AMD x86-64 architecture. */
+/* Define for the unknown architecture. */
 #undef ARCH_UNKNOWN
 
 /* Define for the AMD x86-64 architecture. */
