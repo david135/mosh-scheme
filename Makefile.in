@@ -652,7 +652,7 @@ data_DATA = all-tests.scm #repl.scm #tools/psyntax-r6rs/rev10_to_10/psyntax.scm
 nobase_data_DATA = ${mosh_core_libraries} #${mosh_core_fasl_libraries}
 PRECOMPILE_SRC = compiler-with-library.scmc pmatch.scmc psyntax.scmc
 INCLUDES = -I $(BOEHM_GC_DIR)/include -I $(ONIG_DIR)
-EXTRA_DIST = instruction.scm vm.scm library.scm compiler.scm free-vars.scm scripts pmatch.scm test-data.scm doc repl.scm tools/psyntax-r6rs/rev10_to_10/psyntax.scm r6rs-examples tools/psyntax-r6rs RELNOTE r6rs-test-suite example lib cprocedures.cpp labels.cpp all-tests.scm test call.inc.cpp ${GTEST_DIR} ffitest.c bench win mosh.vcproj mosh.sln logo r6rs-test-suite README-WINDOWS.txt README.MINGW
+EXTRA_DIST = instruction.scm vm.scm library.scm compiler.scm free-vars.scm scripts pmatch.scm test-data.scm doc repl.scm tools/psyntax-r6rs/rev10_to_10/psyntax.scm mosh.1 mosh_config.1 tools/psyntax-r6rs RELNOTE r6rs-test-suite example lib cprocedures.cpp labels.cpp all-tests.scm test call.inc.cpp ${GTEST_DIR} ffitest.c bench win mosh.vcproj mosh.sln logo r6rs-test-suite README-WINDOWS.txt README.MINGW
 GENERATED = \
 all-tests.scm Scanner.cpp NumberScanner.cpp psyntax.cpp  compiler-gauche.scm \
 DebugInstruction.h cprocedures.cpp      \
@@ -3153,14 +3153,13 @@ libffitest.so.1.0: ffitest.c
 
 @DEVELOPER_TRUE@OSConstants.h: ./os-constants.scm
 @DEVELOPER_TRUE@	./mosh ./scripts/gen-os-constants.scm > $@
+# when you release comment out end
 
-@DEVELOPER_TRUE@doc:
-@DEVELOPER_TRUE@	./mosh scripts/gen-doc-from-r6rs.scm
-@DEVELOPER_TRUE@	perl ~/NaturalDocs-1.4/NaturalDocs -i . -o HTML doc/html -p doc/config -s pink -xi tools
+doc:
+	./mosh scripts/gen-doc-from-r6rs.scm
+	perl ~/NaturalDocs-1.4/NaturalDocs -i . -o HTML doc/html -p doc/config -s pink -xi tools
 # 	@GOSH@ ./scripts/gen-doc.scm "manual" "doc/"
 # 	@GOSH@ ./scripts/gen-doc-index.scm "top" "doc/"
-
-# when you release comment out end
 
 .PHONY: bench doc test install
 
