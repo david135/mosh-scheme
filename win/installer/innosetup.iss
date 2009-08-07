@@ -3,7 +3,7 @@
 
 [Setup]
 AppName=Mosh
-AppVerName=mosh 0.2.0
+AppVerName=mosh 0.1.2
 AppPublisher=higepon
 AppPublisherURL=http://code.google.com/p/mosh-scheme/
 AppSupportURL=http://code.google.com/p/mosh-scheme/
@@ -12,7 +12,7 @@ DefaultDirName={pf}\Mosh
 DefaultGroupName=Mosh
 AllowNoIcons=yes
 LicenseFile=..\..\COPYING
-OutputBaseFilename=setup_mosh_0.2.0
+OutputBaseFilename=setup_mosh_0.0.2
 Compression=lzma
 SolidCompression=yes
 SetupIconFile="..\..\logo\mosh.ico"
@@ -26,14 +26,12 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 [Files]
 Source: "..\..\mosh.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\lib\*"; DestDir: "{app}\lib"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "..\..\example\*"; DestDir: "{app}\example"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\doc\html\*"; DestDir: "{app}\doc"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
 Name: "{group}\mosh"; Filename: "{app}\mosh.exe"
 Name: "{group}\manual.html"; Filename: "{app}\doc\index.html"
-Name: "{group}\example"; Filename: "{app}\example"
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\mosh"; Filename: "{app}\mosh.exe"; Tasks: quicklaunchicon
 
 [Run]
