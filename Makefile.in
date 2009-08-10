@@ -280,7 +280,6 @@ ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
-GOSH = @GOSH@
 GREP = @GREP@
 HAVE_EXT_HASHES = @HAVE_EXT_HASHES@
 HAVE_TR1_HASHES = @HAVE_TR1_HASHES@
@@ -3087,15 +3086,15 @@ libffitest.so.1.0: ffitest.c
 
 #### Instruction.h
 @DEVELOPER_TRUE@Instruction.h: ./instruction.scm
-@DEVELOPER_TRUE@	@GOSH@ ./scripts/gen-insn.scm $(PWD)/$< > $(PWD)/$@
+@DEVELOPER_TRUE@	gosh ./scripts/gen-insn.scm $(PWD)/$< > $(PWD)/$@
 
 @DEVELOPER_TRUE@main.cpp: psyntax.h compiler-with-library.h pmatch.h
 
 @DEVELOPER_TRUE@./compiler-vm-cpp.scm: ./compiler.scm free-vars-decl.scm
-@DEVELOPER_TRUE@	@GOSH@ ./scripts/gen-compiler.scm $(PWD)/$< "mosh" > $(PWD)/$@
+@DEVELOPER_TRUE@	gosh ./scripts/gen-compiler.scm $(PWD)/$< "mosh" > $(PWD)/$@
 
 @DEVELOPER_TRUE@compiler-with-library.scmc: ./compiler-with-library.scm ./compiler-vm.scm
-@DEVELOPER_TRUE@	@GOSH@ ./vm.scm compile-file-with-macro $(PWD)/$< > $(PWD)/$@
+@DEVELOPER_TRUE@	gosh ./vm.scm compile-file-with-macro $(PWD)/$< > $(PWD)/$@
 @DEVELOPER_TRUE@	sed -i -e "s/#\\\\null/#\\\\nul/g;s/|\.\.\.|/\.\.\./g;s/|@|/@/g" $(PWD)/$@
 
 @DEVELOPER_TRUE@SUFFIXES: .scmc .h
@@ -3107,20 +3106,20 @@ libffitest.so.1.0: ffitest.c
 # 	(cd doc && mosh ../scripts/binary2c.scm $(PWD)/$<.fasl $(PWD)/$@)
 
 @DEVELOPER_TRUE@pmatch.scmc: ./pmatch.scm ./compiler-vm.scm
-@DEVELOPER_TRUE@	@GOSH@ ./vm.scm compile-file-without-macro $(PWD)/$< > $(PWD)/$@
+@DEVELOPER_TRUE@	gosh ./vm.scm compile-file-without-macro $(PWD)/$< > $(PWD)/$@
 @DEVELOPER_TRUE@	sed -i -e "s/#\\\\null/#\\\\nul/g;s/|\.\.\.|/\.\.\./g" $(PWD)/$@
 
 # we need to replace #\null => #\nul and |...| => ...
 # It is the difference between gauche and mosh.
 @DEVELOPER_TRUE@psyntax.scmc: tools/psyntax-r6rs/rev10_to_10/psyntax.scm ./compiler-vm.scm
-@DEVELOPER_TRUE@	@GOSH@ ./vm.scm compile-file-without-macro $(PWD)/$< > $(PWD)/$@
+@DEVELOPER_TRUE@	gosh ./vm.scm compile-file-without-macro $(PWD)/$< > $(PWD)/$@
 @DEVELOPER_TRUE@	sed -i -e "s/#\\\\null/#\\\\nul/g;s/|\.\.\.|/\.\.\./g" $(PWD)/$@
 
 @DEVELOPER_TRUE@./compiler-with-library.scm: ./library.scm ./compiler-vm-cpp.scm $(CORE_LIBS)
 @DEVELOPER_TRUE@	cat $^ > $(PWD)/$@
 
 @DEVELOPER_TRUE@./free-vars-decl.scm: ./free-vars.scm
-@DEVELOPER_TRUE@	@GOSH@ ./scripts/gen-free-vars-decl.scm $(PWD)/$< > $(PWD)/$@
+@DEVELOPER_TRUE@	gosh ./scripts/gen-free-vars-decl.scm $(PWD)/$< > $(PWD)/$@
 
 @DEVELOPER_TRUE@./compiler-vm.scm: ./compiler.scm free-vars-decl.scm
 @DEVELOPER_TRUE@	./scripts/gen-compiler.scm $(PWD)/$< "vm?" > $(PWD)/$@
@@ -3132,17 +3131,17 @@ libffitest.so.1.0: ffitest.c
 @DEVELOPER_TRUE@	./scripts/gen-compiler.scm $(PWD)/$< "gauche" > $(PWD)/$@  || (rm -f $(PWD)/$@ && false)
 
 @DEVELOPER_TRUE@labels.cpp: ./instruction.scm
-@DEVELOPER_TRUE@	@GOSH@ ./scripts/gen-label.scm $< > $(PWD)/$@
+@DEVELOPER_TRUE@	gosh ./scripts/gen-label.scm $< > $(PWD)/$@
 
 @DEVELOPER_TRUE@DebugInstruction.h: instruction.scm
-@DEVELOPER_TRUE@	@GOSH@ ./scripts/gen-short-insn.scm $(PWD)/$< > $(PWD)/$@
+@DEVELOPER_TRUE@	gosh ./scripts/gen-short-insn.scm $(PWD)/$< > $(PWD)/$@
 
 @DEVELOPER_TRUE@VM.cpp: cprocedures.cpp labels.cpp
 
 @DEVELOPER_TRUE@Object.h: Object-accessors.h
 
 @DEVELOPER_TRUE@./cprocedures.cpp: ./free-vars-decl.scm ./scripts/gen-cproc.scm
-@DEVELOPER_TRUE@	@GOSH@ ./scripts/gen-cproc.scm > $@
+@DEVELOPER_TRUE@	gosh ./scripts/gen-cproc.scm > $@
 
 @DEVELOPER_TRUE@all-tests.scm: ./test-data.scm
 @DEVELOPER_TRUE@	mosh -5 ./scripts/gen-test.scm $< $@
@@ -3165,7 +3164,7 @@ doc:
 
 bench:
 #	@GOSH@ ./scripts/bench.scm > /dev/null
-	LANG=C @GOSH@ ./scripts/bench2.scm
+	LANG=C gosh ./scripts/bench2.scm
 
 #### test
 check: test
