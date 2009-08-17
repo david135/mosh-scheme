@@ -455,3 +455,15 @@ bool isSimpleStruct() const
     && reinterpret_cast<HeapObject*>(val)->type == HeapObject::SimpleStruct;
 }
 
+Continuation* toContinuation() const
+{
+    MOSH_ASSERT(isContinuation());
+    return reinterpret_cast<Continuation*>(reinterpret_cast<HeapObject*>(val)->obj);
+}
+
+bool isContinuation() const
+{
+    return isHeapObject()
+    && reinterpret_cast<HeapObject*>(val)->type == HeapObject::Continuation;
+}
+
