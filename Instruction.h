@@ -113,7 +113,8 @@ public:
         LOCAL_CALL = 3214,
         VECTOR = 3246,
         SIMPLE_STRUCT_REF = 3278,
-        INSTRUCTION_COUNT = 103,
+        DYNAMIC_WINDERS = 3310,
+        INSTRUCTION_COUNT = 104,
     };
     static const ucs4char* toString(int val) {
         switch(val) {
@@ -425,6 +426,9 @@ public:
            break;
         case SIMPLE_STRUCT_REF:
            return UC("SIMPLE_STRUCT_REF");
+           break;
+        case DYNAMIC_WINDERS:
+           return UC("DYNAMIC_WINDERS");
            break;
         default:
            return UC("Unkown Instruction");
