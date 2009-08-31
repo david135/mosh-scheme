@@ -653,6 +653,8 @@ MOSH_OPTS
 MINGW32_FALSE
 MINGW32_TRUE
 WINDRES
+FFI_X86_64_FALSE
+FFI_X86_64_TRUE
 FFI_I386_FALSE
 FFI_I386_TRUE
 HAVE_EXT_HASHES
@@ -5558,6 +5560,14 @@ else
   FFI_I386_FALSE=
 fi
 
+         if false; then
+  FFI_X86_64_TRUE=
+  FFI_X86_64_FALSE='#'
+else
+  FFI_X86_64_TRUE='#'
+  FFI_X86_64_FALSE=
+fi
+
         ;;
 x86?64*)
         arch=x86_64
@@ -5568,6 +5578,22 @@ $as_echo "x86_64" >&6; }
 cat >>confdefs.h <<\_ACEOF
 #define ARCH_X86_64 1
 _ACEOF
+
+         if false; then
+  FFI_I386_TRUE=
+  FFI_I386_FALSE='#'
+else
+  FFI_I386_TRUE='#'
+  FFI_I386_FALSE=
+fi
+
+         if true; then
+  FFI_X86_64_TRUE=
+  FFI_X86_64_FALSE='#'
+else
+  FFI_X86_64_TRUE='#'
+  FFI_X86_64_FALSE=
+fi
 
         ;;
 *)
@@ -5580,6 +5606,22 @@ $as_echo "$as_me: WARNING: architecture $host_cpu is not supported, but may work
 cat >>confdefs.h <<\_ACEOF
 #define ARCH_UNKNOWN 1
 _ACEOF
+
+         if false; then
+  FFI_I386_TRUE=
+  FFI_I386_FALSE='#'
+else
+  FFI_I386_TRUE='#'
+  FFI_I386_FALSE=
+fi
+
+         if false; then
+  FFI_X86_64_TRUE=
+  FFI_X86_64_FALSE='#'
+else
+  FFI_X86_64_TRUE='#'
+  FFI_X86_64_FALSE=
+fi
 
         ;;
 esac
@@ -8635,6 +8677,41 @@ if test -z "${FFI_I386_TRUE}" && test -z "${FFI_I386_FALSE}"; then
   { { $as_echo "$as_me:$LINENO: error: conditional \"FFI_I386\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
 $as_echo "$as_me: error: conditional \"FFI_I386\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${FFI_X86_64_TRUE}" && test -z "${FFI_X86_64_FALSE}"; then
+  { { $as_echo "$as_me:$LINENO: error: conditional \"FFI_X86_64\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+$as_echo "$as_me: error: conditional \"FFI_X86_64\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${FFI_I386_TRUE}" && test -z "${FFI_I386_FALSE}"; then
+  { { $as_echo "$as_me:$LINENO: error: conditional \"FFI_I386\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+$as_echo "$as_me: error: conditional \"FFI_I386\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${FFI_X86_64_TRUE}" && test -z "${FFI_X86_64_FALSE}"; then
+  { { $as_echo "$as_me:$LINENO: error: conditional \"FFI_X86_64\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+$as_echo "$as_me: error: conditional \"FFI_X86_64\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${FFI_I386_TRUE}" && test -z "${FFI_I386_FALSE}"; then
+  { { $as_echo "$as_me:$LINENO: error: conditional \"FFI_I386\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+$as_echo "$as_me: error: conditional \"FFI_I386\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${FFI_X86_64_TRUE}" && test -z "${FFI_X86_64_FALSE}"; then
+  { { $as_echo "$as_me:$LINENO: error: conditional \"FFI_X86_64\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+$as_echo "$as_me: error: conditional \"FFI_X86_64\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi

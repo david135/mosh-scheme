@@ -47,6 +47,7 @@ TESTS = test_object$(EXEEXT) test_vm$(EXEEXT) test_port$(EXEEXT) \
 @DEVELOPER_TRUE@	test_thread$(EXEEXT)
 @MINGW32_TRUE@am__append_1 = mosh-icon.o
 @FFI_I386_TRUE@am__append_2 = ffi_stub_i386.s
+@FFI_X86_64_TRUE@am__append_3 = ffi_stub_x86_64.s
 check_PROGRAMS = test_object$(EXEEXT) test_vm$(EXEEXT) \
 	test_port$(EXEEXT) test_fasl$(EXEEXT) test_ffi$(EXEEXT) \
 	test_compat$(EXEEXT) test_getopt$(EXEEXT) test_thread$(EXEEXT)
@@ -148,8 +149,10 @@ am__libmosh_a_SOURCES_DIST = HeapObject.h Object-inl.h \
 	LineBufferedFileBinaryInputOutputPort.h MultiVMProcedures.h \
 	MultiVMProcedures.cpp OSCompatSocket.h OSCompatSocket.cpp \
 	OSCompatThread.h OSCompatThread.cpp VMFactory.cpp VMFactory.h \
-	SimpleStruct.h OSCompat.h OSCompat.cpp ffi_stub_i386.s
+	SimpleStruct.h OSCompat.h OSCompat.cpp ffi_stub_i386.s \
+	ffi_stub_x86_64.s
 @FFI_I386_TRUE@am__objects_1 = ffi_stub_i386.$(OBJEXT)
+@FFI_X86_64_TRUE@am__objects_2 = ffi_stub_x86_64.$(OBJEXT)
 am_libmosh_a_OBJECTS = libmosh_a-Transcoder.$(OBJEXT) \
 	libmosh_a-EqvHashTable.$(OBJEXT) libmosh_a-Compnum.$(OBJEXT) \
 	libmosh_a-Fixnum.$(OBJEXT) libmosh_a-Closure.$(OBJEXT) \
@@ -221,7 +224,7 @@ am_libmosh_a_OBJECTS = libmosh_a-Transcoder.$(OBJEXT) \
 	libmosh_a-OSCompatSocket.$(OBJEXT) \
 	libmosh_a-OSCompatThread.$(OBJEXT) \
 	libmosh_a-VMFactory.$(OBJEXT) libmosh_a-OSCompat.$(OBJEXT) \
-	$(am__objects_1)
+	$(am__objects_1) $(am__objects_2)
 libmosh_a_OBJECTS = $(am_libmosh_a_OBJECTS)
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" \
 	"$(DESTDIR)$(man1dir)" "$(DESTDIR)$(datadir)" \
@@ -563,7 +566,8 @@ libmosh_a_SOURCES = HeapObject.h Object-inl.h Object-accessors.h \
 	LineBufferedFileBinaryInputOutputPort.h MultiVMProcedures.h \
 	MultiVMProcedures.cpp OSCompatSocket.h OSCompatSocket.cpp \
 	OSCompatThread.h OSCompatThread.cpp VMFactory.cpp VMFactory.h \
-	SimpleStruct.h OSCompat.h OSCompat.cpp $(am__append_2)
+	SimpleStruct.h OSCompat.h OSCompat.cpp $(am__append_2) \
+	$(am__append_3)
 mosh_core_libraries = \
 lib/match.ss \
 lib/memcached.ss \
