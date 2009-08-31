@@ -46,6 +46,7 @@ TESTS = test_object$(EXEEXT) test_vm$(EXEEXT) test_port$(EXEEXT) \
 @DEVELOPER_TRUE@	test_compat$(EXEEXT) test_getopt$(EXEEXT) \
 @DEVELOPER_TRUE@	test_thread$(EXEEXT)
 @MINGW32_TRUE@am__append_1 = mosh-icon.o
+@FFI_I386_TRUE@am__append_2 = ffi_stub_i386.s
 check_PROGRAMS = test_object$(EXEEXT) test_vm$(EXEEXT) \
 	test_port$(EXEEXT) test_fasl$(EXEEXT) test_ffi$(EXEEXT) \
 	test_compat$(EXEEXT) test_getopt$(EXEEXT) test_thread$(EXEEXT)
@@ -73,6 +74,82 @@ AR = ar
 ARFLAGS = cru
 libmosh_a_AR = $(AR) $(ARFLAGS)
 libmosh_a_LIBADD =
+am__libmosh_a_SOURCES_DIST = HeapObject.h Object-inl.h \
+	Object-accessors.h Pair-inl.h VM-inl.h psyntax.h pmatch.h \
+	compiler-with-library.h CProcedure.h Instruction.h Callable.h \
+	GenericMap.h BinaryInputPort.h BinaryOutputPort.h scheme.h \
+	ByteVector.h HashTable.h Pair.h \
+	LineBufferedFileBinaryOutputPort.h Stack.h Gloc.h \
+	BinaryInputOutputPort.h Box.h Port.h BinaryPort.h OutputPort.h \
+	Codec.h Transcoder.h Transcoder.cpp ProcedureMacro.h \
+	EqvHashTable.h EqvHashTable.cpp Compnum.h Compnum.cpp Fixnum.h \
+	Fixnum.cpp Closure.h Closure.cpp UtilityProcedures.h \
+	UtilityProcedures.cpp ProcessProcedures.h \
+	ProcessProcedures.cpp Reader.h Reader.cpp NumberReader.h \
+	NumberReader.cpp scheme.cpp Regexp.h Regexp.cpp Symbol.h \
+	Symbol.cpp VM.h VM.cpp VM-Profiler.cpp VM-Run.cpp VM-Run.h \
+	Scanner.h Scanner.cpp NumberScanner.h NumberScanner.cpp \
+	ByteArrayBinaryInputPort.h ByteArrayBinaryInputPort.cpp \
+	ByteArrayBinaryOutputPort.h ByteArrayBinaryOutputPort.cpp \
+	ScannerHelper.h ScannerHelper.cpp Reader.tab.hpp \
+	Reader.tab.cpp NumberReader.tab.hpp NumberReader.tab.cpp \
+	FileBinaryInputPort.h FileBinaryInputPort.cpp \
+	BufferedFileBinaryInputPort.h BufferedFileBinaryInputPort.cpp \
+	FileBinaryOutputPort.h FileBinaryOutputPort.cpp \
+	BufferedFileBinaryOutputPort.h \
+	BufferedFileBinaryOutputPort.cpp CustomBinaryInputPort.h \
+	CustomBinaryInputPort.cpp CustomTextualInputPort.h \
+	CustomTextualInputPort.cpp CustomTextualOutputPort.h \
+	CustomTextualOutputPort.cpp CustomTextualInputOutputPort.h \
+	CustomTextualInputOutputPort.cpp CustomBinaryInputOutputPort.h \
+	CustomBinaryInputOutputPort.cpp TextualOutputPort.h \
+	TextualOutputPort.cpp TextualInputPort.cpp TextualInputPort.h \
+	TranscodedTextualInputPort.cpp TranscodedTextualInputPort.h \
+	TranscodedTextualOutputPort.cpp TranscodedTextualOutputPort.h \
+	StringTextualOutputPort.h StringTextualOutputPort.cpp \
+	StringTextualInputPort.h StringTextualInputPort.cpp Codec.cpp \
+	UTF8Codec.cpp UTF8Codec.h UTF16Codec.cpp UTF16Codec.h \
+	UTF32Codec.cpp UTF32Codec.h EqHashTable.h EqHashTable.cpp \
+	SString.h SString.cpp GenericHashTable.h GenericHashTable.cpp \
+	Object.h Object.cpp RecordTypeDescriptor.h \
+	RecordTypeDescriptor.cpp RecordConstructorDescriptor.h \
+	RecordConstructorDescriptor.cpp Record.h Record.cpp \
+	RecordProcedures.cpp RecordProcedures.h \
+	ConditionProcedures.cpp ConditionProcedures.h \
+	CompilerProcedures.cpp CompilerProcedures.h \
+	HashTableProceduures.cpp HashTableProceduures.h \
+	RegexpProcedures.cpp RegexpProcedures.h StringProcedures.cpp \
+	StringProcedures.h PortProcedures.cpp PortProcedures.h \
+	ListProcedures.cpp ListProcedures.h ErrorProcedures.cpp \
+	ErrorProcedures.h ArithmeticProcedures.cpp \
+	ArithmeticProcedures.h FlonumProcedures.cpp FlonumProcedures.h \
+	BitwiseProcedures.cpp BitwiseProcedures.h \
+	ByteVectorProcedures.cpp ByteVectorProcedures.h \
+	SocketProcedures.cpp SocketProcedures.h Equivalent.h \
+	Equivalent.cpp CompoundCondition.h CompoundCondition.cpp \
+	ucs4string.h ucs4string.cpp Vector.h Vector.cpp Fasl.h \
+	Fasl.cpp Arithmetic.h Arithmetic.cpp Ratnum.h Ratnum.cpp \
+	Bignum.h Bignum.cpp Flonum.h Flonum.cpp CodeBuilder.h \
+	CodeBuilder.cpp FixnumProcedures.h FixnumProcedures.cpp \
+	Latin1Codec.h Latin1Codec.cpp FFI.h FFI.cpp FFIProcedures.h \
+	FFIProcedures.cpp CustomBinaryOutputPort.h \
+	CustomBinaryOutputPort.cpp FileBinaryInputOutputPort.h \
+	FileBinaryInputOutputPort.cpp SocketBinaryInputOutputPort.h \
+	SocketBinaryInputOutputPort.cpp \
+	TranscodedTextualInputOutputPort.h \
+	TranscodedTextualInputOutputPort.cpp \
+	BufferedFileBinaryInputOutputPort.h \
+	BufferedFileBinaryInputOutputPort.cpp \
+	TestingFileBinaryOutputPort.h TestingFileBinaryInputPort.h \
+	TestingVM.h OSConstants.h getoptU.h getoptU.cpp \
+	StandardOutputPort.h StandardErrorPort.h StandardInputPort.h \
+	BlockBufferedFileBinaryOutputPort.h \
+	BlockBufferedFileBinaryInputOutputPort.h \
+	LineBufferedFileBinaryInputOutputPort.h MultiVMProcedures.h \
+	MultiVMProcedures.cpp OSCompatSocket.h OSCompatSocket.cpp \
+	OSCompatThread.h OSCompatThread.cpp VMFactory.cpp VMFactory.h \
+	SimpleStruct.h OSCompat.h OSCompat.cpp ffi_stub_i386.s
+@FFI_I386_TRUE@am__objects_1 = ffi_stub_i386.$(OBJEXT)
 am_libmosh_a_OBJECTS = libmosh_a-Transcoder.$(OBJEXT) \
 	libmosh_a-EqvHashTable.$(OBJEXT) libmosh_a-Compnum.$(OBJEXT) \
 	libmosh_a-Fixnum.$(OBJEXT) libmosh_a-Closure.$(OBJEXT) \
@@ -143,7 +220,8 @@ am_libmosh_a_OBJECTS = libmosh_a-Transcoder.$(OBJEXT) \
 	libmosh_a-MultiVMProcedures.$(OBJEXT) \
 	libmosh_a-OSCompatSocket.$(OBJEXT) \
 	libmosh_a-OSCompatThread.$(OBJEXT) \
-	libmosh_a-VMFactory.$(OBJEXT) libmosh_a-OSCompat.$(OBJEXT)
+	libmosh_a-VMFactory.$(OBJEXT) libmosh_a-OSCompat.$(OBJEXT) \
+	$(am__objects_1)
 libmosh_a_OBJECTS = $(am_libmosh_a_OBJECTS)
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" \
 	"$(DESTDIR)$(man1dir)" "$(DESTDIR)$(datadir)" \
@@ -209,6 +287,7 @@ CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 CXXLD = $(CXX)
 CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
+CCASCOMPILE = $(CCAS) $(AM_CCASFLAGS) $(CCASFLAGS)
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -217,7 +296,7 @@ SOURCES = $(libmosh_a_SOURCES) $(mosh_SOURCES) $(test_compat_SOURCES) \
 	$(test_fasl_SOURCES) $(test_ffi_SOURCES) \
 	$(test_getopt_SOURCES) $(test_object_SOURCES) \
 	$(test_port_SOURCES) $(test_thread_SOURCES) $(test_vm_SOURCES)
-DIST_SOURCES = $(libmosh_a_SOURCES) $(mosh_SOURCES) \
+DIST_SOURCES = $(am__libmosh_a_SOURCES_DIST) $(mosh_SOURCES) \
 	$(test_compat_SOURCES) $(test_fasl_SOURCES) \
 	$(test_ffi_SOURCES) $(test_getopt_SOURCES) \
 	$(test_object_SOURCES) $(test_port_SOURCES) \
@@ -265,6 +344,9 @@ AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
 CC = @CC@
+CCAS = @CCAS@
+CCASDEPMODE = @CCASDEPMODE@
+CCASFLAGS = @CCASFLAGS@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
 CPPFLAGS = @CPPFLAGS@
@@ -407,129 +489,81 @@ mosh_LDADD = libmosh.a $(GC_LIB) $(REGEXP_LIB) @MOSH_LDADD_ARCH@ \
 	$(am__append_1)
 noinst_LIBRARIES = libmosh.a
 libmosh_a_CXXFLAGS = $(mosh_CFLAGS) $(mosh_OPTS) -I$(GTEST_DIR) -I$(GTEST_DIR)/include
-libmosh_a_SOURCES = \
-HeapObject.h                                                       \
-Object-inl.h                                                       \
-Object-accessors.h                                                 \
-Pair-inl.h                                                         \
-VM-inl.h                                                           \
-psyntax.h                                                          \
-pmatch.h                                                           \
-compiler-with-library.h                                            \
-CProcedure.h                                                       \
-Instruction.h                                                      \
-Callable.h                                                         \
-GenericMap.h                                                       \
-BinaryInputPort.h                                                  \
-BinaryOutputPort.h                                                 \
-scheme.h                                                           \
-ByteVector.h                                                       \
-HashTable.h                                                        \
-Pair.h                                                             \
-LineBufferedFileBinaryOutputPort.h                                 \
-Stack.h                                                            \
-Gloc.h                         BinaryInputOutputPort.h             \
-Box.h                          Port.h                              \
-BinaryPort.h                   OutputPort.h                        \
-Codec.h                                                            \
-Transcoder.h                   Transcoder.cpp                      \
-ProcedureMacro.h                                                   \
-EqvHashTable.h                 EqvHashTable.cpp                    \
-Compnum.h                      Compnum.cpp                         \
-Fixnum.h                       Fixnum.cpp                          \
-Closure.h                      Closure.cpp                         \
-UtilityProcedures.h            UtilityProcedures.cpp               \
-ProcessProcedures.h            ProcessProcedures.cpp               \
-Reader.h                       Reader.cpp                          \
-NumberReader.h                 NumberReader.cpp                    \
-scheme.h                       scheme.cpp                          \
-Regexp.h                       Regexp.cpp                          \
-Symbol.h                       Symbol.cpp                          \
-VM.h                           VM.cpp                              \
-VM-Profiler.cpp                VM-Run.cpp                          \
-VM-Run.h                                                           \
-Scanner.h                      Scanner.cpp                         \
-NumberScanner.h                NumberScanner.cpp                   \
-ByteArrayBinaryInputPort.h     ByteArrayBinaryInputPort.cpp        \
-ByteArrayBinaryOutputPort.h    ByteArrayBinaryOutputPort.cpp       \
-ScannerHelper.h                ScannerHelper.cpp                   \
-Reader.tab.hpp                 Reader.tab.cpp                      \
-NumberReader.tab.hpp           NumberReader.tab.cpp                \
-FileBinaryInputPort.h          FileBinaryInputPort.cpp             \
-BufferedFileBinaryInputPort.h  BufferedFileBinaryInputPort.cpp     \
-FileBinaryOutputPort.h         FileBinaryOutputPort.cpp            \
-BufferedFileBinaryOutputPort.h BufferedFileBinaryOutputPort.cpp    \
-CustomBinaryInputPort.h        CustomBinaryInputPort.cpp           \
-CustomTextualInputPort.h       CustomTextualInputPort.cpp          \
-CustomTextualOutputPort.h      CustomTextualOutputPort.cpp         \
-CustomTextualInputOutputPort.h CustomTextualInputOutputPort.cpp    \
-CustomBinaryInputOutputPort.h  CustomBinaryInputOutputPort.cpp     \
-TextualOutputPort.h            TextualOutputPort.cpp               \
-TextualInputPort.cpp           TextualInputPort.h                  \
-TranscodedTextualInputPort.cpp TranscodedTextualInputPort.h        \
-TranscodedTextualOutputPort.cpp TranscodedTextualOutputPort.h      \
-StringTextualOutputPort.h      StringTextualOutputPort.cpp         \
-StringTextualInputPort.h       StringTextualInputPort.cpp          \
-Codec.cpp                      Codec.h                             \
-UTF8Codec.cpp                  UTF8Codec.h                         \
-UTF16Codec.cpp                 UTF16Codec.h                        \
-UTF32Codec.cpp                 UTF32Codec.h                        \
-EqHashTable.h                  EqHashTable.cpp                     \
-SString.h                      SString.cpp                         \
-GenericHashTable.h             GenericHashTable.cpp                \
-Object.h                       Object.cpp                          \
-RecordTypeDescriptor.h         RecordTypeDescriptor.cpp            \
-RecordConstructorDescriptor.h  RecordConstructorDescriptor.cpp     \
-Record.h                       Record.cpp                          \
-RecordProcedures.cpp           RecordProcedures.h                  \
-ConditionProcedures.cpp        ConditionProcedures.h               \
-CompilerProcedures.cpp         CompilerProcedures.h                \
-HashTableProceduures.cpp       HashTableProceduures.h              \
-RegexpProcedures.cpp           RegexpProcedures.h                  \
-StringProcedures.cpp           StringProcedures.h                  \
-PortProcedures.cpp             PortProcedures.h                    \
-ListProcedures.cpp             ListProcedures.h                    \
-ErrorProcedures.cpp            ErrorProcedures.h                   \
-ArithmeticProcedures.cpp       ArithmeticProcedures.h              \
-FlonumProcedures.cpp           FlonumProcedures.h                  \
-BitwiseProcedures.cpp          BitwiseProcedures.h                 \
-ByteVectorProcedures.cpp       ByteVectorProcedures.h              \
-SocketProcedures.cpp           SocketProcedures.h                  \
-Equivalent.h                   Equivalent.cpp                      \
-CompoundCondition.h            CompoundCondition.cpp               \
-ucs4string.h                   ucs4string.cpp                      \
-Vector.h                       Vector.cpp                          \
-Fasl.h                         Fasl.cpp                            \
-Arithmetic.h                   Arithmetic.cpp                      \
-Ratnum.h                       Ratnum.cpp                          \
-Bignum.h                       Bignum.cpp                          \
-Flonum.h                       Flonum.cpp                          \
-CodeBuilder.h                  CodeBuilder.cpp                     \
-FixnumProcedures.h             FixnumProcedures.cpp                \
-Latin1Codec.h                  Latin1Codec.cpp                     \
-FFI.h                          FFI.cpp                             \
-FFIProcedures.h                FFIProcedures.cpp                   \
-CustomBinaryOutputPort.h       CustomBinaryOutputPort.cpp          \
-FileBinaryInputOutputPort.h    FileBinaryInputOutputPort.cpp       \
-SocketBinaryInputOutputPort.h  SocketBinaryInputOutputPort.cpp     \
-TranscodedTextualInputOutputPort.h  TranscodedTextualInputOutputPort.cpp  \
-BufferedFileBinaryInputOutputPort.h  BufferedFileBinaryInputOutputPort.cpp \
-TestingFileBinaryOutputPort.h TestingFileBinaryInputPort.h \
-TestingVM.h OSConstants.h \
-getoptU.h getoptU.cpp                                                      \
-StandardOutputPort.h \
-StandardErrorPort.h \
-StandardInputPort.h \
-BlockBufferedFileBinaryOutputPort.h \
-BlockBufferedFileBinaryInputOutputPort.h \
-LineBufferedFileBinaryInputOutputPort.h \
-MultiVMProcedures.h MultiVMProcedures.cpp \
-OSCompatSocket.h OSCompatSocket.cpp \
-OSCompatThread.h OSCompatThread.cpp \
-VMFactory.cpp VMFactory.h \
-SimpleStruct.h \
-OSCompat.h OSCompat.cpp
-
+libmosh_a_SOURCES = HeapObject.h Object-inl.h Object-accessors.h \
+	Pair-inl.h VM-inl.h psyntax.h pmatch.h compiler-with-library.h \
+	CProcedure.h Instruction.h Callable.h GenericMap.h \
+	BinaryInputPort.h BinaryOutputPort.h scheme.h ByteVector.h \
+	HashTable.h Pair.h LineBufferedFileBinaryOutputPort.h Stack.h \
+	Gloc.h BinaryInputOutputPort.h Box.h Port.h BinaryPort.h \
+	OutputPort.h Codec.h Transcoder.h Transcoder.cpp \
+	ProcedureMacro.h EqvHashTable.h EqvHashTable.cpp Compnum.h \
+	Compnum.cpp Fixnum.h Fixnum.cpp Closure.h Closure.cpp \
+	UtilityProcedures.h UtilityProcedures.cpp ProcessProcedures.h \
+	ProcessProcedures.cpp Reader.h Reader.cpp NumberReader.h \
+	NumberReader.cpp scheme.h scheme.cpp Regexp.h Regexp.cpp \
+	Symbol.h Symbol.cpp VM.h VM.cpp VM-Profiler.cpp VM-Run.cpp \
+	VM-Run.h Scanner.h Scanner.cpp NumberScanner.h \
+	NumberScanner.cpp ByteArrayBinaryInputPort.h \
+	ByteArrayBinaryInputPort.cpp ByteArrayBinaryOutputPort.h \
+	ByteArrayBinaryOutputPort.cpp ScannerHelper.h \
+	ScannerHelper.cpp Reader.tab.hpp Reader.tab.cpp \
+	NumberReader.tab.hpp NumberReader.tab.cpp \
+	FileBinaryInputPort.h FileBinaryInputPort.cpp \
+	BufferedFileBinaryInputPort.h BufferedFileBinaryInputPort.cpp \
+	FileBinaryOutputPort.h FileBinaryOutputPort.cpp \
+	BufferedFileBinaryOutputPort.h \
+	BufferedFileBinaryOutputPort.cpp CustomBinaryInputPort.h \
+	CustomBinaryInputPort.cpp CustomTextualInputPort.h \
+	CustomTextualInputPort.cpp CustomTextualOutputPort.h \
+	CustomTextualOutputPort.cpp CustomTextualInputOutputPort.h \
+	CustomTextualInputOutputPort.cpp CustomBinaryInputOutputPort.h \
+	CustomBinaryInputOutputPort.cpp TextualOutputPort.h \
+	TextualOutputPort.cpp TextualInputPort.cpp TextualInputPort.h \
+	TranscodedTextualInputPort.cpp TranscodedTextualInputPort.h \
+	TranscodedTextualOutputPort.cpp TranscodedTextualOutputPort.h \
+	StringTextualOutputPort.h StringTextualOutputPort.cpp \
+	StringTextualInputPort.h StringTextualInputPort.cpp Codec.cpp \
+	Codec.h UTF8Codec.cpp UTF8Codec.h UTF16Codec.cpp UTF16Codec.h \
+	UTF32Codec.cpp UTF32Codec.h EqHashTable.h EqHashTable.cpp \
+	SString.h SString.cpp GenericHashTable.h GenericHashTable.cpp \
+	Object.h Object.cpp RecordTypeDescriptor.h \
+	RecordTypeDescriptor.cpp RecordConstructorDescriptor.h \
+	RecordConstructorDescriptor.cpp Record.h Record.cpp \
+	RecordProcedures.cpp RecordProcedures.h \
+	ConditionProcedures.cpp ConditionProcedures.h \
+	CompilerProcedures.cpp CompilerProcedures.h \
+	HashTableProceduures.cpp HashTableProceduures.h \
+	RegexpProcedures.cpp RegexpProcedures.h StringProcedures.cpp \
+	StringProcedures.h PortProcedures.cpp PortProcedures.h \
+	ListProcedures.cpp ListProcedures.h ErrorProcedures.cpp \
+	ErrorProcedures.h ArithmeticProcedures.cpp \
+	ArithmeticProcedures.h FlonumProcedures.cpp FlonumProcedures.h \
+	BitwiseProcedures.cpp BitwiseProcedures.h \
+	ByteVectorProcedures.cpp ByteVectorProcedures.h \
+	SocketProcedures.cpp SocketProcedures.h Equivalent.h \
+	Equivalent.cpp CompoundCondition.h CompoundCondition.cpp \
+	ucs4string.h ucs4string.cpp Vector.h Vector.cpp Fasl.h \
+	Fasl.cpp Arithmetic.h Arithmetic.cpp Ratnum.h Ratnum.cpp \
+	Bignum.h Bignum.cpp Flonum.h Flonum.cpp CodeBuilder.h \
+	CodeBuilder.cpp FixnumProcedures.h FixnumProcedures.cpp \
+	Latin1Codec.h Latin1Codec.cpp FFI.h FFI.cpp FFIProcedures.h \
+	FFIProcedures.cpp CustomBinaryOutputPort.h \
+	CustomBinaryOutputPort.cpp FileBinaryInputOutputPort.h \
+	FileBinaryInputOutputPort.cpp SocketBinaryInputOutputPort.h \
+	SocketBinaryInputOutputPort.cpp \
+	TranscodedTextualInputOutputPort.h \
+	TranscodedTextualInputOutputPort.cpp \
+	BufferedFileBinaryInputOutputPort.h \
+	BufferedFileBinaryInputOutputPort.cpp \
+	TestingFileBinaryOutputPort.h TestingFileBinaryInputPort.h \
+	TestingVM.h OSConstants.h getoptU.h getoptU.cpp \
+	StandardOutputPort.h StandardErrorPort.h StandardInputPort.h \
+	BlockBufferedFileBinaryOutputPort.h \
+	BlockBufferedFileBinaryInputOutputPort.h \
+	LineBufferedFileBinaryInputOutputPort.h MultiVMProcedures.h \
+	MultiVMProcedures.cpp OSCompatSocket.h OSCompatSocket.cpp \
+	OSCompatThread.h OSCompatThread.cpp VMFactory.cpp VMFactory.h \
+	SimpleStruct.h OSCompat.h OSCompat.cpp $(am__append_2)
 mosh_core_libraries = \
 lib/match.ss \
 lib/memcached.ss \
@@ -717,7 +751,7 @@ all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
 .SUFFIXES:
-.SUFFIXES: .cpp .h .o .obj .scmc
+.SUFFIXES: .cpp .h .o .obj .s .scmc
 am--refresh:
 	@:
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
@@ -2481,6 +2515,12 @@ test_vm-TestingSignalHandler.obj: TestingSignalHandler.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='TestingSignalHandler.cpp' object='test_vm-TestingSignalHandler.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_vm_CXXFLAGS) $(CXXFLAGS) -c -o test_vm-TestingSignalHandler.obj `if test -f 'TestingSignalHandler.cpp'; then $(CYGPATH_W) 'TestingSignalHandler.cpp'; else $(CYGPATH_W) '$(srcdir)/TestingSignalHandler.cpp'; fi`
+
+.s.o:
+	$(CCASCOMPILE) -c -o $@ $<
+
+.s.obj:
+	$(CCASCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 install-man1: $(man1_MANS) $(man_MANS)
 	@$(NORMAL_INSTALL)
 	test -z "$(man1dir)" || $(MKDIR_P) "$(DESTDIR)$(man1dir)"
