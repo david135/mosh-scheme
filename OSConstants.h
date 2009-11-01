@@ -63,6 +63,8 @@ osConstants->set(Symbol::intern(UC("size-of-int")), Bignum::makeInteger(sizeof(i
 osConstants->set(Symbol::intern(UC("size-of-long")), Bignum::makeInteger(sizeof(long)));
 osConstants->set(Symbol::intern(UC("size-of-void*")), Bignum::makeInteger(sizeof(void*)));
 osConstants->set(Symbol::intern(UC("size-of-size_t")), Bignum::makeInteger(sizeof(size_t)));
+osConstants->set(Symbol::intern(UC("size-of-float")), Bignum::makeInteger(sizeof(float)));
+osConstants->set(Symbol::intern(UC("size-of-double")), Bignum::makeInteger(sizeof(double)));
 {
     struct x { char y; char z; };
     osConstants->set(Symbol::intern(UC("align-of-char")), Object::makeFixnum(offsetof(x, z)));
