@@ -59,8 +59,12 @@ osConstants->set(Symbol::intern(UC("SHUT_RDWR")), Bignum::makeInteger((long int)
 osConstants->set(Symbol::intern(UC("size-of-char")), Bignum::makeInteger(sizeof(char)));
 osConstants->set(Symbol::intern(UC("size-of-bool")), Bignum::makeInteger(sizeof(bool)));
 osConstants->set(Symbol::intern(UC("size-of-short")), Bignum::makeInteger(sizeof(short)));
+osConstants->set(Symbol::intern(UC("size-of-unsigned-short")), Bignum::makeInteger(sizeof(unsigned short)));
 osConstants->set(Symbol::intern(UC("size-of-int")), Bignum::makeInteger(sizeof(int)));
+osConstants->set(Symbol::intern(UC("size-of-unsigned-int")), Bignum::makeInteger(sizeof(unsigned int)));
 osConstants->set(Symbol::intern(UC("size-of-long")), Bignum::makeInteger(sizeof(long)));
+osConstants->set(Symbol::intern(UC("size-of-unsigned-long")), Bignum::makeInteger(sizeof(unsigned long)));
+osConstants->set(Symbol::intern(UC("size-of-long-long")), Bignum::makeInteger(sizeof(long long)));
 osConstants->set(Symbol::intern(UC("size-of-void*")), Bignum::makeInteger(sizeof(void*)));
 osConstants->set(Symbol::intern(UC("size-of-size_t")), Bignum::makeInteger(sizeof(size_t)));
 osConstants->set(Symbol::intern(UC("size-of-float")), Bignum::makeInteger(sizeof(float)));
@@ -78,12 +82,28 @@ osConstants->set(Symbol::intern(UC("size-of-double")), Bignum::makeInteger(sizeo
     osConstants->set(Symbol::intern(UC("align-of-short")), Object::makeFixnum(offsetof(x, z)));
 }
 {
+    struct x { char y; unsigned short z; };
+    osConstants->set(Symbol::intern(UC("align-of-unsigned-short")), Object::makeFixnum(offsetof(x, z)));
+}
+{
     struct x { char y; int z; };
     osConstants->set(Symbol::intern(UC("align-of-int")), Object::makeFixnum(offsetof(x, z)));
 }
 {
+    struct x { char y; unsigned int z; };
+    osConstants->set(Symbol::intern(UC("align-of-unsigned-int")), Object::makeFixnum(offsetof(x, z)));
+}
+{
     struct x { char y; long z; };
     osConstants->set(Symbol::intern(UC("align-of-long")), Object::makeFixnum(offsetof(x, z)));
+}
+{
+    struct x { char y; unsigned long z; };
+    osConstants->set(Symbol::intern(UC("align-of-unsigned-long")), Object::makeFixnum(offsetof(x, z)));
+}
+{
+    struct x { char y; long long z; };
+    osConstants->set(Symbol::intern(UC("align-of-long-long")), Object::makeFixnum(offsetof(x, z)));
 }
 {
     struct x { char y; void* z; };
