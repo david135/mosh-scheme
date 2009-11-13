@@ -3099,7 +3099,7 @@ uninstall-man: uninstall-man1
 
 # for FFI test
 libffitest.so.1.0: ffitest.c
-	$(CC) -Wall -fPIC -c $<
+	$(CC) -std=c99 -Wall -fPIC -c $<
 	$(CC) -Wl @SHLIB_SO_LDFLAGS@ -o $@ ffitest.o
 @MINGW32_TRUE@mosh-icon.o : win/mosh.rc logo/mosh.ico
 @MINGW32_TRUE@	$(WINDRES) win/mosh.rc -o mosh-icon.o
