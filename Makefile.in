@@ -570,6 +570,9 @@ libmosh_a_SOURCES = HeapObject.h Object-inl.h Object-accessors.h \
 	SimpleStruct.h OSCompat.h OSCompat.cpp $(am__append_2) \
 	$(am__append_3)
 mosh_core_libraries = \
+lib/mosh/jit.ss \
+lib/mosh/jit/jit-impl.ss \
+lib/mosh/jit/instructions.ss \
 lib/match.ss \
 lib/memcached.ss \
 lib/lambda/wiki.ss    \
@@ -3169,6 +3172,9 @@ libffitest.so.1.0: ffitest.c
 @DEVELOPER_TRUE@psyntax.scmc: tools/psyntax-r6rs/rev10_to_10/psyntax.scm ./compiler-vm.scm
 @DEVELOPER_TRUE@	gosh ./vm.scm compile-file-without-macro $(PWD)/$< > $(PWD)/$@
 @DEVELOPER_TRUE@	sed -i -e "s/#\\\\null/#\\\\nul/g;s/|\.\.\.|/\.\.\./g" $(PWD)/$@
+
+@DEVELOPER_TRUE@./lib/mosh/jit/instructions.ss: ./instruction.scm
+@DEVELOPER_TRUE@	./mosh ./scripts/gen-insn-definitions.scm $(PWD)/$< > $@
 
 @DEVELOPER_TRUE@./compiler-with-library.scm: ./library.scm ./compiler-vm-cpp.scm $(CORE_LIBS)
 @DEVELOPER_TRUE@	cat $^ > $(PWD)/$@
